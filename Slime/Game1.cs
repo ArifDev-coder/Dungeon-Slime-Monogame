@@ -21,8 +21,7 @@ public class Game1 : Core
     /// <summary>
     /// Tekstur karakter slime yang akan dimainkan dalam permainan.
     /// </summary>
-    private TextureRegion _slime0;
-    private TextureRegion _slime1;
+    private AnimatedSprite _slime;
 
     /// <summary>
     /// Konstruktor untuk membuat game "Dungeon Slime" dengan ukuran 1280x720 pixel.
@@ -50,11 +49,14 @@ public class Game1 : Core
     {
         base.LoadContent();
 
-        TextureAtlas atlas = TextureAtlas.FromFile(Content, "atlas-definition.xml");
+        TextureAtlas slimeMove = TextureAtlas.FromFile(Content, "atlas-definition.xml");
 
-        _slime0 = atlas.GetRegion("slime0");
-        _slime1 = atlas.GetRegion("slime1");
-        
+        // _slime0 = atlas.GetRegion("slime0");
+        // _slime1 = atlas.GetRegion("slime1");
+
+        _slime = slimeMove.CreateAnimatedSprite("slime_move");
+        _slime.Scale = new Vector2(4.0f, 4.0f);
+
         _logo_se = Content.Load<Texture2D>("images/logo");
     }
 
@@ -69,6 +71,8 @@ public class Game1 : Core
         {
             Exit();
         }
+
+        _slime.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -117,19 +121,19 @@ public class Game1 : Core
         //     0.0f                                    // LayerDepth
         // );
 
-        _slime0.Draw(SpriteBatch, Vector2.Zero, Color.White, 0.0f, Vector2.One, 4.0f, SpriteEffects.None, 0.0f);
-        _slime1.Draw(
-            SpriteBatch,
-            new Vector2(
-                500, 500
-            ),
-            Color.White,
-            0.0f,
-            Vector2.One,
-            4.0f,
-            SpriteEffects.None,
-            0.0f
-        );
+        // _slime0.Draw(SpriteBatch, Vector2.Zero, Color.White, 0.0f, Vector2.One, 4.0f, SpriteEffects.None, 0.0f);
+        // _slime1.Draw(
+        //     SpriteBatch,
+        //     new Vector2(
+        //         500, 500
+        //     ),
+        //     Color.White,
+        //     0.0f,
+        //     Vector2.One,
+        //     4.0f,
+        //     SpriteEffects.None,
+        //     0.0f
+        // );
 
         SpriteBatch.Draw(_logo_se,
             new Vector2(
@@ -141,12 +145,12 @@ public class Game1 : Core
             new Vector2(
                 _logo_se.Width,
                 0) * 0.5f,
-            0.8f,
+            0.4f,
             SpriteEffects.None,
             0.0f
         );
 
-
+        _slime.Draw(SpriteBatch, new Vector2(_slime.Width + 10, _slime.Height + 10));
 
         SpriteBatch.End();
 

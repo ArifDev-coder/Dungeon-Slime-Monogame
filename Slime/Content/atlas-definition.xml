@@ -2,7 +2,29 @@
 <TextureAtlas>
   <Texture>images/slime_move</Texture>
   <Regions>
-    <Region name="slime0" x="0" y="0" width="16" height="16" />
-    <Region name="slime1" x="16" y="0" width="16" height="16" />
+    <Region name="slime-1" x="0" y="0" width="16" height="16" />
+    <Region name="slime-2" x="16" y="0" width="16" height="16" />
+    <Region name="slime-3" x="32" y="0" width="16" height="16" />
+    <Region name="slime-4" x="48" y="0" width="16" height="16" />
+    <Region name="slime-5" x="64" y="0" width="16" height="16" />
+    <Region name="slime-6" x="80" y="0" width="16" height="16" />
+    <Region name="slime-7" x="96" y="0" width="16" height="16" />
+    <Region name="slime-8" x="112" y="0" width="16" height="16" />
+    <Region name="slime-9" x="128" y="0" width="16" height="16" />
+    <Region name="slime-10" x="144" y="0" width="16" height="16" />
   </Regions>
+  <Animations>
+    <Animation name="slime_move" delay="100">
+      <Frame region="slime-1"/>
+      <Frame region="slime-2"/>
+      <Frame region="slime-3"/>
+      <Frame region="slime-4"/>
+      <Frame region="slime-5"/>
+      <Frame region="slime-6"/>
+      <Frame region="slime-7"/>
+      <Frame region="slime-8"/>
+      <Frame region="slime-9"/>
+      <Frame region="slime-10"/>
+    </Animation>
+  </Animations>
 </TextureAtlas>
