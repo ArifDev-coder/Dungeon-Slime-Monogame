@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -22,6 +23,13 @@ public class Game1 : Core
     /// Tekstur karakter slime yang akan dimainkan dalam permainan.
     /// </summary>
     private AnimatedSprite _slime;
+
+    private Vector2 _slimePosition;
+    private const float MOVEMENT_SPEED = 1.0f;
+
+    // Input Buffer
+    private Queue<Vector2> _inputBuffer;
+    private const int MAX_BUFFER_SIZE = 2;
 
     /// <summary>
     /// Konstruktor untuk membuat game "Dungeon Slime" dengan ukuran 1280x720 pixel.
@@ -74,7 +82,128 @@ public class Game1 : Core
 
         _slime.Update(gameTime);
 
+        // CheckKeyboardInputWithInputBufferTest();
+        CheckKeyboardInput();
+        CheckGamePadInput();
+
         base.Update(gameTime);
+    }
+
+    private void CheckKeyboardInput()
+    {
+        KeyboardState keyboardState = Keyboard.GetState();
+
+        float speed = MOVEMENT_SPEED;
+        if (keyboardState.IsKeyDown(Keys.Space))
+        {
+            speed *= 1.5f;
+        }
+
+        if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+        {
+            _slimePosition.Y -= speed;
+        }
+
+        if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+        {
+            _slimePosition.Y += speed;
+        }
+
+        if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
+        {
+            _slimePosition.X -= speed;
+        }
+
+        if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+        {
+            _slimePosition.X += speed;
+        }
+    }
+
+    private void CheckKeyboardInputWithInputBufferTest()
+    {
+        _inputBuffer = new Queue<Vector2>(MAX_BUFFER_SIZE);
+
+        KeyboardState keyboardState = Keyboard.GetState();
+        Vector2 newDirection = Vector2.Zero;
+
+        float speed = MOVEMENT_SPEED;
+        if (keyboardState.IsKeyDown(Keys.Space))
+        {
+            speed *= 1.5f;
+        }
+
+        if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+        {
+            newDirection = -Vector2.UnitY;
+        }
+        else if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+        {
+            newDirection = Vector2.UnitY;
+        }
+        else if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
+        {
+            newDirection = -Vector2.UnitX;
+        }
+        else if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+        {
+            newDirection = Vector2.UnitX;
+        }
+
+        if (newDirection != Vector2.Zero && _inputBuffer.Count < MAX_BUFFER_SIZE)
+        {
+            _inputBuffer.Enqueue(newDirection);
+        }
+
+        if (_inputBuffer.Count > 0)
+        {
+            Vector2 nextDirection = _inputBuffer.Dequeue();
+            _slimePosition += nextDirection * speed;
+        }
+    }
+
+    private void CheckGamePadInput()
+    {
+        GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
+
+        float speed = MOVEMENT_SPEED;
+        if (gamePadState.IsButtonDown(Buttons.A))
+        {
+            speed *= 1.5f;
+            GamePad.SetVibration(PlayerIndex.One, 1.0f, 1.0f);
+        }
+        else
+        {
+            GamePad.SetVibration(PlayerIndex.One, 0.0f, 0.0f);
+        }
+
+        if (gamePadState.ThumbSticks.Left != Vector2.Zero)
+        {
+            _slimePosition.X += gamePadState.ThumbSticks.Left.X * speed;
+            _slimePosition.Y -= gamePadState.ThumbSticks.Left.Y * speed;
+        }
+        else
+        {
+            if (gamePadState.IsButtonDown(Buttons.DPadUp))
+            {
+                _slimePosition.Y -= speed;
+            }
+
+            if (gamePadState.IsButtonDown(Buttons.DPadDown))
+            {
+                _slimePosition.Y += speed;
+            }
+
+            if (gamePadState.IsButtonDown(Buttons.DPadLeft))
+            {
+                _slimePosition.X -= speed;
+            }
+
+            if (gamePadState.IsButtonDown(Buttons.DPadLeft))
+            {
+                _slimePosition.X += speed;
+            }
+        }
     }
 
     /// <summary>
@@ -150,7 +279,7 @@ public class Game1 : Core
             0.0f
         );
 
-        _slime.Draw(SpriteBatch, new Vector2(_slime.Width + 10, _slime.Height + 10));
+        _slime.Draw(SpriteBatch, _slimePosition);
 
         SpriteBatch.End();
 
