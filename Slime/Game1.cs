@@ -23,13 +23,16 @@ public class Game1 : Core
     /// Tekstur karakter slime yang akan dimainkan dalam permainan.
     /// </summary>
     private AnimatedSprite _slime;
+    private AnimatedSprite _bat;
 
-    private Vector2 _slimePosition;
+    private Vector2 _slimePosition = Vector2.Zero;
+    private Vector2 _batPosition;
     private const float MOVEMENT_SPEED = 1.0f;
 
     // Input Buffer
     private Queue<Vector2> _inputBuffer;
     private const int MAX_BUFFER_SIZE = 2;
+    private KeyboardState _previousKeyboardState;
 
     /// <summary>
     /// Konstruktor untuk membuat game "Dungeon Slime" dengan ukuran 1280x720 pixel.
@@ -57,13 +60,16 @@ public class Game1 : Core
     {
         base.LoadContent();
 
-        TextureAtlas slimeMove = TextureAtlas.FromFile(Content, "atlas-definition.xml");
+        TextureAtlas entityAtlas = TextureAtlas.FromFile(Content, "entity.xml");
 
         // _slime0 = atlas.GetRegion("slime0");
         // _slime1 = atlas.GetRegion("slime1");
 
-        _slime = slimeMove.CreateAnimatedSprite("slime_move");
+        _slime = entityAtlas.CreateAnimatedSprite("slime_idle");
         _slime.Scale = new Vector2(4.0f, 4.0f);
+
+        _bat = entityAtlas.CreateAnimatedSprite("bat_basic");
+        _bat.Scale = new Vector2(4.0f, 4.0f);
 
         _logo_se = Content.Load<Texture2D>("images/logo");
     }
@@ -81,12 +87,22 @@ public class Game1 : Core
         }
 
         _slime.Update(gameTime);
+        _bat.Update(gameTime);
 
         // CheckKeyboardInputWithInputBufferTest();
         CheckKeyboardInput();
         CheckGamePadInput();
 
+        EnemyAI();
+
         base.Update(gameTime);
+    }
+
+    private void EnemyAI()
+    {
+        Vector2 targetPosition = _slimePosition;
+
+        _batPosition += (targetPosition - _batPosition) * 0.005f;
     }
 
     private void CheckKeyboardInput()
@@ -94,9 +110,10 @@ public class Game1 : Core
         KeyboardState keyboardState = Keyboard.GetState();
 
         float speed = MOVEMENT_SPEED;
-        if (keyboardState.IsKeyDown(Keys.Space))
+        if (keyboardState.IsKeyDown(Keys.Space) && _previousKeyboardState.IsKeyUp(Keys.Space)) 
         {
-            speed *= 1.5f;
+            // speed *= 5.0f;
+            _slimePosition.Y -= 100.0f;
         }
 
         if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
@@ -118,6 +135,8 @@ public class Game1 : Core
         {
             _slimePosition.X += speed;
         }
+
+        _previousKeyboardState = keyboardState;
     }
 
     private void CheckKeyboardInputWithInputBufferTest()
@@ -264,6 +283,9 @@ public class Game1 : Core
         //     0.0f
         // );
 
+        _slime.Draw(SpriteBatch, _slimePosition);
+        _bat.Draw(SpriteBatch, _batPosition);
+
         SpriteBatch.Draw(_logo_se,
             new Vector2(
                 Window.ClientBounds.Width,
@@ -276,10 +298,8 @@ public class Game1 : Core
                 0) * 0.5f,
             0.4f,
             SpriteEffects.None,
-            0.0f
+            1.0f
         );
-
-        _slime.Draw(SpriteBatch, _slimePosition);
 
         SpriteBatch.End();
 
