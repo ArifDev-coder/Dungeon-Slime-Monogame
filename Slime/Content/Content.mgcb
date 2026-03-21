@@ -52,5 +52,5 @@
 /processorParam:TextureFormat=Color
 /build:images/map/grass_sheet.png;images/grass.png
 
-#begin map.xml
-/copy:map.xml;map.xml
+#begin grass.xml
+/copy:grass.xml;grass.xml
