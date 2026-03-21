@@ -13,8 +13,20 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin atlas-definition.xml
-/copy:atlas-definition.xml
+#begin ../../../Game/assets/entity/atlas_entity.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../../../Game/assets/entity/atlas_entity.png;images/atlas_entity.png
+
+#begin ../../../Game/assets/entity/entity.xml
+/copy:../../../Game/assets/entity/entity.xml;entity.xml
 
 #begin images/HorizontalLogo_64px.png
 /importer:TextureImporter
@@ -39,28 +51,3 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:images/logo.png
-
-#begin images/pixil-frame-0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/pixil-frame-0.png
-
-#begin images/slime_move.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/slime_move.png
-
