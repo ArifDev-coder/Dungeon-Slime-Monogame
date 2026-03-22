@@ -15,17 +15,12 @@ namespace Slime;
 public class Game1 : Core
 {
     /// <summary>
-    /// Tekstur logo "Se" yang ditampilkan di atas layar.
-    /// </summary>
-    private Texture2D _logo_se;
-
-    /// <summary>
     /// Tekstur karakter slime yang akan dimainkan dalam permainan.
     /// </summary>
     private AnimatedSprite _slime;
     private AnimatedSprite _bat;
 
-    private Vector2 _slimePosition = Vector2.Zero;
+    private Vector2 _slimePosition;
     private Vector2 _batPosition;
     private const float MOVEMENT_SPEED = 1.0f;
 
@@ -70,8 +65,6 @@ public class Game1 : Core
 
         _bat = entityAtlas.CreateAnimatedSprite("bat_basic");
         _bat.Scale = new Vector2(4.0f, 4.0f);
-
-        _logo_se = Content.Load<Texture2D>("images/logo");
     }
 
     /// <summary>
@@ -108,33 +101,36 @@ public class Game1 : Core
     private void CheckKeyboardInput()
     {
         KeyboardState keyboardState = Keyboard.GetState();
-
-        float speed = MOVEMENT_SPEED;
-        if (keyboardState.IsKeyDown(Keys.Space) && _previousKeyboardState.IsKeyUp(Keys.Space)) 
-        {
-            // speed *= 5.0f;
-            _slimePosition.Y -= 100.0f;
-        }
+        Vector2 direction = Vector2.Zero;
 
         if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
         {
-            _slimePosition.Y -= speed;
+            direction.Y -= 1;
         }
-
         if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
         {
-            _slimePosition.Y += speed;
+            direction.Y += 1;
         }
-
         if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
         {
-            _slimePosition.X -= speed;
+            direction.X -= 1;
         }
-
         if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
         {
-            _slimePosition.X += speed;
+            direction.X += 1;
         }
+
+        if (direction != Vector2.Zero)
+        {
+            direction.Normalize();
+        }
+
+        _slimePosition += direction * MOVEMENT_SPEED;
+
+        // if (keyboardState.IsKeyDown(Keys.Space) && _previousKeyboardState.IsKeyUp(Keys.Space))
+        // {
+        //     _slimePosition.Y -= 100.0f;
+        // }
 
         _previousKeyboardState = keyboardState;
     }
@@ -286,20 +282,20 @@ public class Game1 : Core
         _slime.Draw(SpriteBatch, _slimePosition);
         _bat.Draw(SpriteBatch, _batPosition);
 
-        SpriteBatch.Draw(_logo_se,
-            new Vector2(
-                Window.ClientBounds.Width,
-                10) * 0.5f,
-            null,
-            Color.White,
-            0.0f,
-            new Vector2(
-                _logo_se.Width,
-                0) * 0.5f,
-            0.4f,
-            SpriteEffects.None,
-            1.0f
-        );
+        // SpriteBatch.Draw(_logo_se,
+        //     new Vector2(
+        //         Window.ClientBounds.Width,
+        //         10) * 0.5f,
+        //     null,
+        //     Color.White,
+        //     0.0f,
+        //     new Vector2(
+        //         _logo_se.Width,
+        //         0) * 0.5f,
+        //     0.4f,
+        //     SpriteEffects.None,
+        //     1.0f
+        // );
 
         SpriteBatch.End();
 
