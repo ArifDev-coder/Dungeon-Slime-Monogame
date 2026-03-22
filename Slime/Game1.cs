@@ -103,6 +103,8 @@ public class Game1 : Core
         KeyboardState keyboardState = Keyboard.GetState();
         Vector2 direction = Vector2.Zero;
 
+        float speed = MOVEMENT_SPEED;
+
         if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
         {
             direction.Y -= 1;
@@ -125,12 +127,17 @@ public class Game1 : Core
             direction.Normalize();
         }
 
-        _slimePosition += direction * MOVEMENT_SPEED;
 
-        // if (keyboardState.IsKeyDown(Keys.Space) && _previousKeyboardState.IsKeyUp(Keys.Space))
-        // {
-        //     _slimePosition.Y -= 100.0f;
-        // }
+        if (keyboardState.IsKeyDown(Keys.Space) && _previousKeyboardState.IsKeyUp(Keys.Space))
+        {   
+            speed *= 100;
+        }
+        else
+        {
+            speed = MOVEMENT_SPEED;
+        }
+
+        _slimePosition += direction * speed;
 
         _previousKeyboardState = keyboardState;
     }
