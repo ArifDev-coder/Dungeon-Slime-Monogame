@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame;
 using Slime.Graphics;
+using Slime.Input;
 
 namespace Slime;
 
@@ -27,7 +27,6 @@ public class Game1 : Core
     // Input Buffer
     private Queue<Vector2> _inputBuffer;
     private const int MAX_BUFFER_SIZE = 2;
-    private KeyboardState _previousKeyboardState;
 
     /// <summary>
     /// Konstruktor untuk membuat game "Dungeon Slime" dengan ukuran 1280x720 pixel.
@@ -105,19 +104,19 @@ public class Game1 : Core
 
         float speed = MOVEMENT_SPEED;
 
-        if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+        if (Input.Keyboard.IsKeyDown(Keys.W) || Input.Keyboard.IsKeyDown(Keys.Up))
         {
             direction.Y -= 1;
         }
-        if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+        if (Input.Keyboard.IsKeyDown(Keys.S) || Input.Keyboard.IsKeyDown(Keys.Down))
         {
             direction.Y += 1;
         }
-        if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
+        if (Input.Keyboard.IsKeyDown(Keys.A) || Input.Keyboard.IsKeyDown(Keys.Left))
         {
             direction.X -= 1;
         }
-        if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+        if (Input.Keyboard.IsKeyDown(Keys.D) || Input.Keyboard.IsKeyDown(Keys.Right))
         {
             direction.X += 1;
         }
@@ -128,8 +127,8 @@ public class Game1 : Core
         }
 
 
-        if (keyboardState.IsKeyDown(Keys.Space) && _previousKeyboardState.IsKeyUp(Keys.Space))
-        {   
+        if (Input.Keyboard.WasKeyJustPressed(Keys.Space))
+        {
             speed *= 100;
         }
         else
@@ -139,9 +138,9 @@ public class Game1 : Core
 
         _slimePosition += direction * speed;
 
-        _previousKeyboardState = keyboardState;
     }
 
+    // ! Deprecated
     private void CheckKeyboardInputWithInputBufferTest()
     {
         _inputBuffer = new Queue<Vector2>(MAX_BUFFER_SIZE);
@@ -186,42 +185,42 @@ public class Game1 : Core
 
     private void CheckGamePadInput()
     {
-        GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
+        GamePadInfo gamePadOne = Input.GamePads[(int)PlayerIndex.One];
 
         float speed = MOVEMENT_SPEED;
-        if (gamePadState.IsButtonDown(Buttons.A))
+        if (gamePadOne.WasButtonJustPressed(Buttons.A))
         {
             speed *= 1.5f;
-            GamePad.SetVibration(PlayerIndex.One, 1.0f, 1.0f);
+            gamePadOne.SetVibration(1.0f, TimeSpan.FromSeconds(1));
         }
         else
         {
-            GamePad.SetVibration(PlayerIndex.One, 0.0f, 0.0f);
+            gamePadOne.SetVibration(1.0f, TimeSpan.FromSeconds(1));
         }
 
-        if (gamePadState.ThumbSticks.Left != Vector2.Zero)
+        if (gamePadOne.LeftThumbStick != Vector2.Zero)
         {
-            _slimePosition.X += gamePadState.ThumbSticks.Left.X * speed;
-            _slimePosition.Y -= gamePadState.ThumbSticks.Left.Y * speed;
+            _slimePosition.X += gamePadOne.LeftThumbStick.X * speed;
+            _slimePosition.Y -= gamePadOne.LeftThumbStick.Y * speed;
         }
         else
         {
-            if (gamePadState.IsButtonDown(Buttons.DPadUp))
+            if (gamePadOne.IsButtonDown(Buttons.DPadUp))
             {
                 _slimePosition.Y -= speed;
             }
 
-            if (gamePadState.IsButtonDown(Buttons.DPadDown))
+            if (gamePadOne.IsButtonDown(Buttons.DPadDown))
             {
                 _slimePosition.Y += speed;
             }
 
-            if (gamePadState.IsButtonDown(Buttons.DPadLeft))
+            if (gamePadOne.IsButtonDown(Buttons.DPadLeft))
             {
                 _slimePosition.X -= speed;
             }
 
-            if (gamePadState.IsButtonDown(Buttons.DPadLeft))
+            if (gamePadOne.IsButtonDown(Buttons.DPadLeft))
             {
                 _slimePosition.X += speed;
             }
