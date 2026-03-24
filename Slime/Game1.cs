@@ -25,14 +25,12 @@ public class Game1 : Core
     private Queue<Vector2> _inputBuffer;
     private const int MAX_BUFFER_SIZE = 2;
 
-    public static int resX = 1280;
-    public static int resY = 720;
 
     /// <summary>
     /// Konstruktor untuk membuat game "Dungeon Slime" dengan ukuran 1280x720 pixel.
     /// Judul jendela akan menampilkan "Dungeon Slime".
     /// </summary>
-    public Game1() : base("Dungeon Slime", resX, resY, false)
+    public Game1() : base("Dungeon Slime", 1280, 720, false)
     {
 
     }
@@ -128,7 +126,7 @@ public class Game1 : Core
 
         if (Input.Keyboard.WasKeyJustPressed(Keys.Space))
         {
-            speed *= 100;
+            speed *= 100.0f;
         }
         else
         {
@@ -137,8 +135,8 @@ public class Game1 : Core
 
         _slimePosition += direction * speed;
 
-        float maxX = resX - _slime.Width;
-        float maxY = resY - _slime.Width;
+        float maxX = GraphicsDevice.Viewport.Width - _slime.Width;
+        float maxY = GraphicsDevice.Viewport.Height - _slime.Width;
 
         _slimePosition.X = MathHelper.Clamp(_slimePosition.X, 0, maxX);
         _slimePosition.Y = MathHelper.Clamp(_slimePosition.Y, 0, maxY);
@@ -230,6 +228,12 @@ public class Game1 : Core
                 _slimePosition.X += speed;
             }
         }
+
+        float maxX = GraphicsDevice.Viewport.Width - _slime.Width;
+        float maxY = GraphicsDevice.Viewport.Height - _slime.Height;
+
+        _slimePosition.X = MathHelper.Clamp(_slimePosition.X, 0, maxX);
+        _slimePosition.Y = MathHelper.Clamp(_slimePosition.Y, 0, maxY);
     }
 
     /// <summary>
