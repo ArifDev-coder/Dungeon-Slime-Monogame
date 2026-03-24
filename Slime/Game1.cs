@@ -14,9 +14,6 @@ namespace Slime;
 /// </summary>
 public class Game1 : Core
 {
-    /// <summary>
-    /// Tekstur karakter slime yang akan dimainkan dalam permainan.
-    /// </summary>
     private AnimatedSprite _slime;
     private AnimatedSprite _bat;
 
@@ -28,11 +25,14 @@ public class Game1 : Core
     private Queue<Vector2> _inputBuffer;
     private const int MAX_BUFFER_SIZE = 2;
 
+    public static int resX = 1280;
+    public static int resY = 720;
+
     /// <summary>
     /// Konstruktor untuk membuat game "Dungeon Slime" dengan ukuran 1280x720 pixel.
     /// Judul jendela akan menampilkan "Dungeon Slime".
     /// </summary>
-    public Game1() : base("Dungeon Slime", 1280, 720, false)
+    public Game1() : base("Dungeon Slime", resX, resY, false)
     {
 
     }
@@ -99,7 +99,6 @@ public class Game1 : Core
 
     private void CheckKeyboardInput()
     {
-        KeyboardState keyboardState = Keyboard.GetState();
         Vector2 direction = Vector2.Zero;
 
         float speed = MOVEMENT_SPEED;
@@ -137,6 +136,12 @@ public class Game1 : Core
         }
 
         _slimePosition += direction * speed;
+
+        float maxX = resX - _slime.Width;
+        float maxY = resY - _slime.Width;
+
+        _slimePosition.X = MathHelper.Clamp(_slimePosition.X, 0, maxX);
+        _slimePosition.Y = MathHelper.Clamp(_slimePosition.Y, 0, maxY);
 
     }
 
