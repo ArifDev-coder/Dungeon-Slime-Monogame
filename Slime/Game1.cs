@@ -22,7 +22,7 @@ public class Game1 : Core
     private Vector2 _batPosition;
     private Vector2 _batVelocity;
     
-    private const float MOVEMENT_SPEED = 4.0f;
+    private const float MOVEMENT_SPEED = 5.0f;
 
     // Input Buffer
     private Queue<Vector2> _inputBuffer;
@@ -65,10 +65,11 @@ public class Game1 : Core
         // _slime1 = atlas.GetRegion("slime1");
 
         _slime = entityAtlas.CreateAnimatedSprite("slime_idle");
-        _slime.Scale = new Vector2(4.0f, 4.0f);
+        _slime.Scale = new Vector2(1.0f, 1.0f);
 
         _bat = entityAtlas.CreateAnimatedSprite("bat_basic");
-        _bat.Scale = new Vector2(4.0f, 4.0f);
+
+        _bat.Scale = new Vector2(1.0f, 1.0f);
     }
 
     /// <summary>
@@ -132,7 +133,7 @@ public class Game1 : Core
 
         Circle batBounds = new Circle(
             (int)(newBatPosition.X + (_bat.Width * 0.5f)),
-            (int)(newBatPosition.Y +(_bat.Height * 0.0f)),
+            (int)(newBatPosition.Y +(_bat.Height * 0.5f)),
             (int)(_bat.Width * 0.5f)
         );
 
@@ -224,7 +225,7 @@ public class Game1 : Core
 
         if (Input.Keyboard.WasKeyJustPressed(Keys.Space))
         {
-            speed *= 100.0f;
+            speed *= 10.0f;
         }
         else
         {
