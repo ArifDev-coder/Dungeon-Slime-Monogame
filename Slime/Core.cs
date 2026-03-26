@@ -69,7 +69,9 @@ public class Core : Game
     {
         Input.Update(gameTime);
 
-        if (ExitOnEscape && Input.Keyboard.IsKeyDown(Keys.Escape))
+        GamePadInfo gamePadOne = Input.GamePads[(int)PlayerIndex.One];
+
+        if (ExitOnEscape && Input.Keyboard.IsKeyDown(Keys.Escape) || ExitOnEscape && gamePadOne.IsButtonDown(Buttons.Back))
         {
             Exit();
         }

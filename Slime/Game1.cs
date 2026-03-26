@@ -79,11 +79,6 @@ public class Game1 : Core
     /// <param name="gameTime">Informasi tentang waktu permainan (delta time, total time)</param>
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-        {
-            Exit();
-        }
-
         _slime.Update(gameTime);
         _bat.Update(gameTime);
 
