@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tilemap>
-  <Tileset region="0 0 288 16" tileWidth="16" tileHeight="16">images/grass</Tileset>
-  <Tiles>
-    06 00 01 11
-    17 08 09 16
-    17 08 09 16
-    02 03 04 05
-  </Tiles>
+  <Tileset id="Ground" region="0 0 288 16" tileWidth="16" tileHeight="16">images/grass</Tileset>
+  <Tileset id="Tree" region="0 0 32 32" tileWidth="32" tileHeight="32">images/tree</Tileset>
+  <Layer id="Ground">
+    <Tiles>
+      06 00 01 11
+      17 08 09 16
+      17 08 09 16
+      02 03 04 05
+    </Tiles>
+  </Layer>
+  <Layer id="Tree">
+    <Tiles>
+      00 00 00 01
+      00 01 00 00
+      00 00 01 00
+      00 00 00 00
+    </Tiles>
 </Tilemap>
