@@ -2,7 +2,8 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame;
+using Microsoft.Xna.Framework.Input;
+using Slime.Input;
 
 namespace Slime;
 
@@ -19,6 +20,10 @@ public class Core : Game
     public static SpriteBatch SpriteBatch { get; private set; }
 
     public static new ContentManager Content { get; private set; }
+
+    public static InputManager Input { get; private set; }
+
+    public static bool ExitOnEscape { get; set; }
 
     public Core(string title, int width, int height, bool fullscreen)
     {
@@ -45,6 +50,8 @@ public class Core : Game
         Content.RootDirectory = "Content";
 
         IsMouseVisible = true;
+
+        ExitOnEscape = true;
     }
 
     protected override void Initialize()
@@ -55,7 +62,20 @@ public class Core : Game
 
         SpriteBatch = new SpriteBatch(GraphicsDevice);
 
+        Input = new InputManager();
     }
 
+    protected override void Update(GameTime gameTime)
+    {
+        Input.Update(gameTime);
 
+        GamePadInfo gamePadOne = Input.GamePads[(int)PlayerIndex.One];
+
+        if (ExitOnEscape && Input.Keyboard.IsKeyDown(Keys.Escape) || ExitOnEscape && gamePadOne.IsButtonDown(Buttons.Back))
+        {
+            Exit();
+        }
+
+        base.Update(gameTime);
+    }
 }
