@@ -50,7 +50,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/map/grass_sheet.png;images/grass.png
+/build:images/map/grass_sheet.png;images/grass_sheet.png
 
 #begin images/map/tree.png
 /importer:TextureImporter
