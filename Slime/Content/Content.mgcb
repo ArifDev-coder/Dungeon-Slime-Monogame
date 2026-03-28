@@ -64,4 +64,4 @@
 /processorParam:TextureFormat=Color
 /build:images/map/tree.png;images/tree.png
 
-/copy:grass.xml;grass.xml
+/copy:tilemap-def.xml;tilemap-def.xml
