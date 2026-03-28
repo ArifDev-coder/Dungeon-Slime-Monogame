@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tilemap>
-  <Tileset id="Ground" region="0 0 288 16" tileWidth="16" tileHeight="16">images/grass</Tileset>
+  <Tileset id="Ground" region="0 0 288 16" tileWidth="16" tileHeight="16">images/grass_sheet</Tileset>
   <Tileset id="Tree" region="0 0 32 32" tileWidth="32" tileHeight="32">images/tree</Tileset>
+  <Tileset id="Water" region="0 16 288 16" tileWidth="16" tileHeight="16">images/grass_sheet</Tileset>
   <Layer id="Ground">
     <Tiles>
       06 00 01 11
@@ -16,5 +17,13 @@
       00 01 00 00
       00 00 01 00
       00 00 00 00
+    </Tiles>
+  </Layer>
+  <Layer id="Water">
+    <Tiles>
+      06 00 01 11
+      17 07 07 16
+      17 07 07 16
+      02 03 04 05
     </Tiles>
 </Tilemap>
