@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Xna.Framework;
@@ -30,10 +31,20 @@ public class Tilemap
         _tiles = new int[Count];
     }
 
+    public void SetTile(int index, int tilesetID)
+    {
+        _tiles[index] = tilesetID;
+    }
+
     public void SetTile(int column, int row, int tilesetID)
     {
         int index = row * Columns + column;
         SetTile(index, tilesetID);
+    }
+
+    public TextureRegion GetTile(int index)
+    {
+        return _tileset.GetTile(_tiles[index]);
     }
 
     public TextureRegion GetTile(int column, int row)
@@ -68,18 +79,6 @@ public class Tilemap
                 XDocument doc = XDocument.Load(reader);
                 XElement root = doc.Root;
 
-                // <Tileset> element memiliki informasi tentang tileset
-                // digunakan untuk tilemap.
-                //
-                // Contoh
-                // <Tileset region="0 0 100 100" tileWidth="10" tileHeight="10">contentPath</Tilese>
-                //
-                // Atribut Region merepresentasikan x, y, width, dan height
-                //
-                // tileWidh dan tileHeight atribut adalah width dan height dari setiap tile dalam tileset.
-                //
-                // contentPath value adalah contentPath pada tesktur untuk memuata konten tileset
-                // ya begitu lah.
                 XElement tilesetElement = root.Element("Tileset");
 
                 string regionAttribute = tilesetElement.Attribute("region").Value;
@@ -89,8 +88,8 @@ public class Tilemap
                 int width = int.Parse(split[2]);
                 int height = int.Parse(split[3]);
 
-                int tileWidth = int.Parse(tilesetElement.Attribute("tileWidth"));
-                int tileHeight = int.Parse(tilesetElement.Attribute("tileHeight"));
+                int tileWidth = int.Parse(tilesetElement.Attribute("tileWidth").Value);
+                int tileHeight = int.Parse(tilesetElement.Attribute("tileHeight").Value);
                 string contentPath = tilesetElement.Value;
 
                 Texture2D texture = content.Load<Texture2D>(contentPath);
@@ -98,6 +97,35 @@ public class Tilemap
                 TextureRegion textureRegion = new TextureRegion(texture, x, y, width, height);
 
                 Tileset tileset = new Tileset(textureRegion, tileWidth, tileHeight);
+
+                //
+                // <Titles>
+                //      00 01 01 02
+                //      03 04 04 05
+                //      03 04 04 05
+                //      06 07 07 08
+                // </Tiles>
+                XElement tilesElement = root.Element("Tiles");
+
+                string[] rows = tilesElement.Value.Trim().Split('\n', StringSplitOptions.RemoveEmptyEntries);
+
+                int columnCount = rows[0].Split(" ", StringSplitOptions.RemoveEmptyEntries).Length;
+
+                Tilemap tilemap = new Tilemap(tileset, columnCount, rows.Length);
+
+                for (int row = 0; row < rows.Length; row++)
+                {
+                    string[] columns = rows[row].Trim().Split(" ", StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int column = 0; column < columnCount; column++)
+                    {
+                        int tilesetIndex = int.Parse(columns[column]);
+
+                        tilemap.SetTile(column, row, tilesetIndex);
+                    }
+                }
+
+                return tilemap;
             }
         }
     }
