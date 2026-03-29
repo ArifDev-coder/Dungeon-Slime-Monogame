@@ -23,7 +23,7 @@ public class Game1 : Core
     private Vector2 _batVelocity;
     private Tilemap _tilemap;
     private Rectangle _roomBounds;
-    
+
     private const float MOVEMENT_SPEED = 5.0f;
 
     // Input Buffer
@@ -59,9 +59,12 @@ public class Game1 : Core
 
         int centerRow = _tilemap.Rows / 2;
         int centerColumn = _tilemap.Columns / 2;
+
+        // Init Slime Position at the center tile of the tile map.
         _slimePosition = new Vector2(centerColumn * _tilemap.TileWidth, centerRow * _tilemap.TileHeigth);
 
-        _batPosition = new Vector2(_slime.Width + 10, 0);
+        // Init Bat Position at the center tile of the tile map.
+        _batPosition = new Vector2(_roomBounds.Left, _roomBounds.Top);
 
         AssignRandomBatVelocity();
     }
@@ -110,12 +113,12 @@ public class Game1 : Core
 
     private void EnemyAI()
     {
-        Rectangle screenBounds = new Rectangle(
-            0,
-            0,
-            GraphicsDevice.PresentationParameters.BackBufferWidth,
-            GraphicsDevice.PresentationParameters.BackBufferHeight
-        );
+        // Rectangle screenBounds = new Rectangle(
+        //     0,
+        //     0,
+        //     GraphicsDevice.PresentationParameters.BackBufferWidth,
+        //     GraphicsDevice.PresentationParameters.BackBufferHeight
+        // );
 
         Circle slimeBounds = new Circle(
             (int)(_slimePosition.X + (_slime.Width * 0.5f)),
@@ -135,7 +138,7 @@ public class Game1 : Core
             _slimePosition.X = _roomBounds.Right - _slime.Width;
             // _slimePosition.X = screenBounds.Right - _slime.Width;
         }
-        
+
         // if (slimeBounds.Top < screenBounds.Top)
         if (slimeBounds.Top < _roomBounds.Top)
         {
@@ -153,7 +156,7 @@ public class Game1 : Core
 
         Circle batBounds = new Circle(
             (int)(newBatPosition.X + (_bat.Width * 0.5f)),
-            (int)(newBatPosition.Y +(_bat.Height * 0.5f)),
+            (int)(newBatPosition.Y + (_bat.Height * 0.5f)),
             (int)(_bat.Width * 0.5f)
         );
 
