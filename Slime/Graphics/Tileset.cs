@@ -7,7 +7,7 @@ public class Tileset
     private readonly TextureRegion[] _tiles;
 
     public int TileWidth { get; }
-    public int TileHeigth { get; }
+    public int TileHeight { get; }
     public int Columns { get; }
     public int Rows { get; }
     public int Count { get; }
@@ -15,7 +15,7 @@ public class Tileset
     public Tileset(TextureRegion textureRegion, int tileWidth, int tileHeigth)
     {
         TileWidth = tileWidth;
-        TileHeigth = tileHeigth;
+        TileHeight = tileHeigth;
         Columns = textureRegion.Width / tileWidth;
         Rows = textureRegion.Height / tileHeigth;
         Count = Columns * Rows;

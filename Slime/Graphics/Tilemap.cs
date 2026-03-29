@@ -19,7 +19,7 @@ public class Tilemap
     public int Count { get; }
     public Vector2 Scale { get; set; }
     public float TileWidth => _tileset.TileWidth * Scale.X;
-    public float TileHeigth => _tileset.TileHeigth * Scale.Y;
+    public float TileHeight => _tileset.TileHeight * Scale.Y;
 
     public Tilemap(Tileset tileset, int columns, int rows)
     {
@@ -63,7 +63,7 @@ public class Tilemap
             int x = i % Columns;
             int y = i / Columns;
 
-            Vector2 position = new Vector2(x * TileWidth, y * TileHeigth);
+            Vector2 position = new Vector2(x * TileWidth, y * TileHeight);
             tile.Draw(spriteBatch, position, Color.White, 0.0f, Vector2.Zero, Scale, SpriteEffects.None, 1.0f);
         }
     }

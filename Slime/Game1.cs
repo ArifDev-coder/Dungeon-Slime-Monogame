@@ -52,16 +52,16 @@ public class Game1 : Core
 
         _roomBounds = new Rectangle(
             (int)_tilemap.TileWidth,
-            (int)_tilemap.TileHeigth,
+            (int)_tilemap.TileHeight,
             screenBounds.Width - (int)_tilemap.TileWidth * 2,
-            screenBounds.Height - (int)_tilemap.TileHeigth * 2
+            screenBounds.Height - (int)_tilemap.TileHeight * 2
         );
 
         int centerRow = _tilemap.Rows / 2;
         int centerColumn = _tilemap.Columns / 2;
 
         // Init Slime Position at the center tile of the tile map.
-        _slimePosition = new Vector2(centerColumn * _tilemap.TileWidth, centerRow * _tilemap.TileHeigth);
+        _slimePosition = new Vector2(centerColumn * _tilemap.TileWidth, centerRow * _tilemap.TileHeight);
 
         // Init Bat Position at the center tile of the tile map.
         _batPosition = new Vector2(_roomBounds.Left, _roomBounds.Top);
