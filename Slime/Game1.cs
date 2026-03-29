@@ -59,7 +59,7 @@ public class Game1 : Core
 
         int centerRow = _tilemap.Rows / 2;
         int centerColumn = _tilemap.Columns / 2;
-        _slimePosition = new Vector2(_roomBounds.Left, _roomBounds.Top);
+        _slimePosition = new Vector2(centerColumn * _tilemap.TileWidth, centerRow * _tilemap.TileHeigth);
 
         _batPosition = new Vector2(_slime.Width + 10, 0);
 
