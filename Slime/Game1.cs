@@ -89,7 +89,7 @@ public class Game1 : Core
         _bat.Scale = new Vector2(1.0f, 1.0f);
 
         _tilemap = Tilemap.FromFile(Content, "tilemap-def.xml");
-        _tilemap.Scale = new Vector2(4.0f, 4.0f);
+        _tilemap.Scale = new Vector2(5.0f, 5.0f);
     }
 
     /// <summary>
