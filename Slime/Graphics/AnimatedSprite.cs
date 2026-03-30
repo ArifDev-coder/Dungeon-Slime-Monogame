@@ -14,8 +14,13 @@ public class AnimatedSprite : Sprite
         get => _animation;
         set
         {
-            _animation = value;
-            Region = _animation.Frames[0];
+            if(_animation != value)
+            {
+                _animation = value;
+                _currentFrame = 0;
+                _elapsed = TimeSpan.Zero;
+                Region = _animation.Frames[0];
+            }
         }
     }
 

@@ -15,6 +15,8 @@ namespace Slime;
 /// </summary>
 public class Game1 : Core
 {
+    private TextureAtlas _entityAtlas;
+
     private AnimatedSprite _slime;
     private AnimatedSprite _bat;
 
@@ -24,7 +26,7 @@ public class Game1 : Core
     private Tilemap _tilemap;
     private Rectangle _roomBounds;
 
-    private const float MOVEMENT_SPEED = 5.0f;
+    private const float MOVEMENT_SPEED = 1.0f;
 
     // Input Buffer
     private Queue<Vector2> _inputBuffer;
@@ -77,15 +79,15 @@ public class Game1 : Core
     {
         base.LoadContent();
 
-        TextureAtlas entityAtlas = TextureAtlas.FromFile(Content, "entity.xml");
+        _entityAtlas = TextureAtlas.FromFile(Content, "entity.xml");
 
         // _slime0 = atlas.GetRegion("slime0");
         // _slime1 = atlas.GetRegion("slime1");
 
-        _slime = entityAtlas.CreateAnimatedSprite("slime_idle");
+        _slime = _entityAtlas.CreateAnimatedSprite("slime_idle");
         _slime.Scale = new Vector2(1.0f, 1.0f);
 
-        _bat = entityAtlas.CreateAnimatedSprite("bat_basic");
+        _bat = _entityAtlas.CreateAnimatedSprite("bat_basic");
         _bat.Scale = new Vector2(1.0f, 1.0f);
 
         _tilemap = Tilemap.FromFile(Content, "tilemap-def.xml");
@@ -99,12 +101,12 @@ public class Game1 : Core
     /// <param name="gameTime">Informasi tentang waktu permainan (delta time, total time)</param>
     protected override void Update(GameTime gameTime)
     {
+        CheckKeyboardInput();
+        // CheckKeyboardInputWithInputBufferTest();
+        CheckGamePadInput();
+
         _slime.Update(gameTime);
         _bat.Update(gameTime);
-
-        // CheckKeyboardInputWithInputBufferTest();
-        CheckKeyboardInput();
-        CheckGamePadInput();
 
         EnemyAI();
 
@@ -243,6 +245,18 @@ public class Game1 : Core
             direction.X += 1;
         }
 
+        if (direction != Vector2.Zero || Input.Keyboard.WasKeyJustPressed(Keys.Space))
+        {
+            _slime.Animation = _entityAtlas.GetAnimation("slime_move");
+
+            if (direction.X < 0) _slime.Effects = SpriteEffects.FlipHorizontally;
+            else if (direction.X > 0) _slime.Effects = SpriteEffects.None;
+
+        } else
+        {
+            _slime.Animation = _entityAtlas.GetAnimation("slime_idle");
+        }
+
         if (direction != Vector2.Zero)
         {
             direction.Normalize();
@@ -251,7 +265,7 @@ public class Game1 : Core
 
         if (Input.Keyboard.WasKeyJustPressed(Keys.Space))
         {
-            speed *= 10.0f;
+            speed *= 50.0f;
         }
         else
         {
@@ -304,6 +318,7 @@ public class Game1 : Core
         }
     }
 
+    // ! Not Tested
     private void CheckGamePadInput()
     {
         GamePadInfo gamePadOne = Input.GamePads[(int)PlayerIndex.One];
@@ -311,7 +326,7 @@ public class Game1 : Core
         float speed = MOVEMENT_SPEED;
         if (gamePadOne.WasButtonJustPressed(Buttons.A))
         {
-            speed *= 1.5f;
+            speed *= 50.0f;
             gamePadOne.SetVibration(1.0f, TimeSpan.FromSeconds(1));
         }
         else
@@ -355,7 +370,7 @@ public class Game1 : Core
     /// <param name="gameTime">Informasi tentang waktu permainan (delta time, total time)</param>
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.Gray);
+        GraphicsDevice.Clear(Color.DeepSkyBlue);
 
         // Rectangle IconSourceRect = new(0, 0, 128, 128);
         // Rectangle WordmarkSourceRect = new(150, 34, 458, 58);

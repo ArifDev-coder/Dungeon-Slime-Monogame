@@ -47,7 +47,7 @@
 
     <!-- <=== Bat Basic ===> -->
     <!-- Basic -->
-    <Animation name="bat_basic" delay="100">
+    <Animation name="bat_basic" delay="80">
       <Frame region="bat-1"/>
       <Frame region="bat-2"/>
       <Frame region="bat-3"/>
