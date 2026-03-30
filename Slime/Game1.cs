@@ -245,7 +245,7 @@ public class Game1 : Core
             direction.X += 1;
         }
 
-        if (direction != Vector2.Zero)
+        if (direction != Vector2.Zero || Input.Keyboard.WasKeyJustPressed(Keys.Space))
         {
             _slime.Animation = _entityAtlas.GetAnimation("slime_move");
 
