@@ -262,7 +262,7 @@ public class Game1 : Core
 
         if (Input.Keyboard.WasKeyJustPressed(Keys.Space))
         {
-            speed *= 10.0f;
+            speed *= 50.0f;
         }
         else
         {
@@ -315,6 +315,7 @@ public class Game1 : Core
         }
     }
 
+    // ! Not Tested
     private void CheckGamePadInput()
     {
         GamePadInfo gamePadOne = Input.GamePads[(int)PlayerIndex.One];
@@ -322,7 +323,7 @@ public class Game1 : Core
         float speed = MOVEMENT_SPEED;
         if (gamePadOne.WasButtonJustPressed(Buttons.A))
         {
-            speed *= 1.5f;
+            speed *= 50.0f;
             gamePadOne.SetVibration(1.0f, TimeSpan.FromSeconds(1));
         }
         else
