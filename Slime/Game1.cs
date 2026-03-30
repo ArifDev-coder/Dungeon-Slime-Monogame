@@ -249,6 +249,9 @@ public class Game1 : Core
         {
             _slime.Animation = _entityAtlas.GetAnimation("slime_move");
 
+            if (direction.X < 0) _slime.Effects = SpriteEffects.FlipHorizontally;
+            else if (direction.X > 0) _slime.Effects = SpriteEffects.None;
+
         } else
         {
             _slime.Animation = _entityAtlas.GetAnimation("slime_idle");
