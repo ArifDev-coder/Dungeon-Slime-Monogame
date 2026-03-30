@@ -15,6 +15,8 @@ namespace Slime;
 /// </summary>
 public class Game1 : Core
 {
+    private TextureAtlas _entityAtlas;
+
     private AnimatedSprite _slime;
     private AnimatedSprite _bat;
 
@@ -241,6 +243,11 @@ public class Game1 : Core
         if (Input.Keyboard.IsKeyDown(Keys.D) || Input.Keyboard.IsKeyDown(Keys.Right))
         {
             direction.X += 1;
+        }
+
+        if (direction.X == 0 && direction.Y == 0)
+        {
+
         }
 
         if (direction != Vector2.Zero)
