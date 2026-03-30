@@ -1,0 +1,33 @@
+name: Build and Release Game
+
+on:
+  push:
+    branches: [ "main", "learn" ] # Biar di branch mana pun lu push, dia build
+  pull_request:
+    branches: [ "main", "learn" ]
+
+jobs:
+  build:
+    runs-on: windows-latest # Pake Windows biar gampang build .exe buat temen lu
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Publish Game (Self-Contained)
+      # Kita build jadi satu file .exe biar temen lu gak ribet
+      run: dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfContained=true -o ./TestingBuild
+
+    - name: Upload Build Result
+      # Ini langkah paling PENTING biar temen lu bisa download filenya
+      uses: actions/upload-artifact@v4
+      with:
+        name: SpaceEnd-Alpha-Build
+        path: ./TestingBuild/
