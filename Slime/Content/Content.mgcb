@@ -13,7 +13,7 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin ../../../Game/assets/entity/atlas_entity.png
+#begin images/entity/atlas_entity.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -23,10 +23,10 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../../../Game/assets/entity/atlas_entity.png;images/atlas_entity.png
+/build:images/entity/atlas_entity.png;images/atlas_entity.png
 
-#begin ../../../Game/assets/entity/entity.xml
-/copy:../../../Game/assets/entity/entity.xml;entity.xml
+#begin entity.xml
+/copy:entity.xml;entity.xml
 
 #begin images/HorizontalLogo_64px.png
 /importer:TextureImporter
@@ -40,7 +40,7 @@
 /processorParam:TextureFormat=Color
 /build:images/HorizontalLogo_64px.png;images/logomg.png
 
-#begin images/logo.png
+#begin images/map/grass_sheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -50,4 +50,18 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/logo.png
+/build:images/map/grass_sheet.png;images/grass_sheet.png
+
+#begin images/map/tree.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/map/tree.png;images/tree.png
+
+/copy:tilemap-def.xml;tilemap-def.xml

@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas>
+  <Texture>images/atlas_entity</Texture>
+  <Regions>
+
+    <!-- <=== Bat ===> -->
+    <Region name="bat-1" x="0" y="96" width="32" height="32" />
+    <Region name="bat-2" x="32" y="96" width="32" height="32" />
+    <Region name="bat-3" x="64" y="96" width="32" height="32" />
+    <Region name="bat-4" x="96" y="96" width="32" height="32" />
+    <Region name="bat-5" x="128" y="96" width="32" height="32" />
+    <Region name="bat-6" x="160" y="96" width="32" height="32" />
+    <Region name="bat-7" x="192" y="96" width="32" height="32" />
+    <Region name="bat-8" x="224" y="96" width="32" height="32" />
+    <Region name="bat-9" x="256" y="96" width="32" height="32" />
+    <Region name="bat-10" x="288" y="96" width="32" height="32" />
+    <Region name="bat-11" x="320" y="96" width="32" height="32" />
+    <Region name="bat-12" x="352" y="96" width="32" height="32" />
+    <Region name="bat-13" x="384" y="96" width="32" height="32" />
+    <Region name="bat-14" x="416" y="96" width="32" height="32" />
+    <Region name="bat-15" x="448" y="96" width="32" height="32" />
+    <Region name="bat-16" x="480" y="96" width="32" height="32" />
+
+    <!-- <=== Slime ===> -->
+    <!-- Idle -->
+    <Region name="slime-1" x="0" y="0" width="32" height="32" />
+    <Region name="slime-2" x="32" y="0" width="32" height="32" />
+    <Region name="slime-3" x="64" y="0" width="32" height="32" />
+    <Region name="slime-4" x="96" y="0" width="32" height="32" />
+    <Region name="slime-5" x="128" y="0" width="32" height="32" />
+    <Region name="slime-6" x="160" y="0" width="32" height="32" />
+    <Region name="slime-7" x="192" y="0" width="32" height="32" />
+    <Region name="slime-8" x="224" y="0" width="32" height="32" />
+    <Region name="slime-9" x="256" y="0" width="32" height="32" />
+    <Region name="slime-10" x="288" y="0" width="32" height="32" />
+    <!-- Move -->
+    <Region name="slime-11" x="0" y="32" width="32" height="32" />
+    <Region name="slime-12" x="32" y="32" width="32" height="32" />
+    <Region name="slime-13" x="64" y="32" width="32" height="32" />
+    <Region name="slime-14" x="96" y="32" width="32" height="32" />
+    <Region name="slime-15" x="128" y="32" width="32" height="32" />
+    <Region name="slime-16" x="160" y="32" width="32" height="32" />
+    <Region name="slime-17" x="192" y="32" width="32" height="32" />
+
+  </Regions>
+  <Animations>
+
+    <!-- <=== Bat Basic ===> -->
+    <!-- Basic -->
+    <Animation name="bat_basic" delay="80">
+      <Frame region="bat-1"/>
+      <Frame region="bat-2"/>
+      <Frame region="bat-3"/>
+      <Frame region="bat-4"/>
+      <Frame region="bat-5"/>
+      <Frame region="bat-6"/>
+      <Frame region="bat-7"/>
+      <Frame region="bat-8"/>
+      <Frame region="bat-9"/>
+      <Frame region="bat-10"/>
+      <Frame region="bat-11"/>
+      <Frame region="bat-12"/>
+      <Frame region="bat-13"/>
+      <Frame region="bat-14"/>
+      <Frame region="bat-15"/>
+      <Frame region="bat-16"/>
+    </Animation>
+
+    <!-- <=== Slime ===> -->
+    <!-- Idle -->
+    <Animation name="slime_idle" delay="100">
+      <Frame region="slime-1"/>
+      <Frame region="slime-2"/>
+      <Frame region="slime-3"/>
+      <Frame region="slime-4"/>
+      <Frame region="slime-5"/>
+      <Frame region="slime-6"/>
+      <Frame region="slime-7"/>
+      <Frame region="slime-8"/>
+      <Frame region="slime-9"/>
+      <Frame region="slime-10"/>
+    </Animation>
+    <!-- Move -->
+    <Animation name="slime_move" delay="100">
+      <Frame region="slime-11"/>
+      <Frame region="slime-12"/>
+      <Frame region="slime-13"/>
+      <Frame region="slime-14"/>
+      <Frame region="slime-15"/>
+      <Frame region="slime-16"/>
+      <Frame region="slime-17"/>
+    </Animation>
+  </Animations>
+</TextureAtlas>

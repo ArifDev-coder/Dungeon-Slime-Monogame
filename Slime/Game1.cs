@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame;
 using Slime.Graphics;
+using Slime.Input;
+using Slime;
 
 namespace Slime;
 
@@ -14,25 +15,23 @@ namespace Slime;
 /// </summary>
 public class Game1 : Core
 {
-    /// <summary>
-    /// Tekstur logo "Se" yang ditampilkan di atas layar.
-    /// </summary>
-    private Texture2D _logo_se;
+    private TextureAtlas _entityAtlas;
 
-    /// <summary>
-    /// Tekstur karakter slime yang akan dimainkan dalam permainan.
-    /// </summary>
     private AnimatedSprite _slime;
     private AnimatedSprite _bat;
 
-    private Vector2 _slimePosition = Vector2.Zero;
+    private Vector2 _slimePosition;
     private Vector2 _batPosition;
+    private Vector2 _batVelocity;
+    private Tilemap _tilemap;
+    private Rectangle _roomBounds;
+
     private const float MOVEMENT_SPEED = 1.0f;
 
     // Input Buffer
     private Queue<Vector2> _inputBuffer;
     private const int MAX_BUFFER_SIZE = 2;
-    private KeyboardState _previousKeyboardState;
+
 
     /// <summary>
     /// Konstruktor untuk membuat game "Dungeon Slime" dengan ukuran 1280x720 pixel.
@@ -50,6 +49,26 @@ public class Game1 : Core
     protected override void Initialize()
     {
         base.Initialize();
+
+        Rectangle screenBounds = GraphicsDevice.PresentationParameters.Bounds;
+
+        _roomBounds = new Rectangle(
+            (int)_tilemap.TileWidth,
+            (int)_tilemap.TileHeight,
+            screenBounds.Width - (int)_tilemap.TileWidth * 2,
+            screenBounds.Height - (int)_tilemap.TileHeight * 2
+        );
+
+        int centerRow = _tilemap.Rows / 2;
+        int centerColumn = _tilemap.Columns / 2;
+
+        // Init Slime Position at the center tile of the tile map.
+        _slimePosition = new Vector2(centerColumn * _tilemap.TileWidth, centerRow * _tilemap.TileHeight);
+
+        // Init Bat Position at the center tile of the tile map.
+        _batPosition = new Vector2(_roomBounds.Left, _roomBounds.Top);
+
+        AssignRandomBatVelocity();
     }
 
     /// <summary>
@@ -60,18 +79,19 @@ public class Game1 : Core
     {
         base.LoadContent();
 
-        TextureAtlas entityAtlas = TextureAtlas.FromFile(Content, "entity.xml");
+        _entityAtlas = TextureAtlas.FromFile(Content, "entity.xml");
 
         // _slime0 = atlas.GetRegion("slime0");
         // _slime1 = atlas.GetRegion("slime1");
 
-        _slime = entityAtlas.CreateAnimatedSprite("slime_idle");
-        _slime.Scale = new Vector2(4.0f, 4.0f);
+        _slime = _entityAtlas.CreateAnimatedSprite("slime_idle");
+        _slime.Scale = new Vector2(1.0f, 1.0f);
 
-        _bat = entityAtlas.CreateAnimatedSprite("bat_basic");
-        _bat.Scale = new Vector2(4.0f, 4.0f);
+        _bat = _entityAtlas.CreateAnimatedSprite("bat_basic");
+        _bat.Scale = new Vector2(1.0f, 1.0f);
 
-        _logo_se = Content.Load<Texture2D>("images/logo");
+        _tilemap = Tilemap.FromFile(Content, "tilemap-def.xml");
+        _tilemap.Scale = new Vector2(5.0f, 5.0f);
     }
 
     /// <summary>
@@ -81,17 +101,12 @@ public class Game1 : Core
     /// <param name="gameTime">Informasi tentang waktu permainan (delta time, total time)</param>
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-        {
-            Exit();
-        }
+        CheckKeyboardInput();
+        // CheckKeyboardInputWithInputBufferTest();
+        CheckGamePadInput();
 
         _slime.Update(gameTime);
         _bat.Update(gameTime);
-
-        // CheckKeyboardInputWithInputBufferTest();
-        CheckKeyboardInput();
-        CheckGamePadInput();
 
         EnemyAI();
 
@@ -100,45 +115,167 @@ public class Game1 : Core
 
     private void EnemyAI()
     {
-        Vector2 targetPosition = _slimePosition;
+        // Rectangle screenBounds = new Rectangle(
+        //     0,
+        //     0,
+        //     GraphicsDevice.PresentationParameters.BackBufferWidth,
+        //     GraphicsDevice.PresentationParameters.BackBufferHeight
+        // );
 
-        _batPosition += (targetPosition - _batPosition) * 0.005f;
+        Circle slimeBounds = new Circle(
+            (int)(_slimePosition.X + (_slime.Width * 0.5f)),
+            (int)(_slimePosition.Y + (_slime.Height * 0.5f)),
+            (int)(_slime.Width * 0.5f)
+        );
+
+        // if (slimeBounds.Left < screenBounds.Left)
+        if (slimeBounds.Left < _roomBounds.Left)
+        {
+            // _slimePosition.X = screenBounds.Left;
+            _slimePosition.X = _roomBounds.Left;
+        }
+        // else if (slimeBounds.Right > screenBounds.Right)
+        else if (slimeBounds.Right > _roomBounds.Right)
+        {
+            _slimePosition.X = _roomBounds.Right - _slime.Width;
+            // _slimePosition.X = screenBounds.Right - _slime.Width;
+        }
+
+        // if (slimeBounds.Top < screenBounds.Top)
+        if (slimeBounds.Top < _roomBounds.Top)
+        {
+            // _slimePosition.Y = screenBounds.Top;
+            _slimePosition.Y = _roomBounds.Top;
+        }
+        // else if (slimeBounds.Bottom > screenBounds.Bottom)
+        else if (slimeBounds.Bottom > _roomBounds.Bottom)
+        {
+            // _slimePosition.Y = screenBounds.Bottom - _slime.Height;
+            _slimePosition.Y = _roomBounds.Bottom - _slime.Height;
+        }
+
+        Vector2 newBatPosition = _batPosition + _batVelocity;
+
+        Circle batBounds = new Circle(
+            (int)(newBatPosition.X + (_bat.Width * 0.5f)),
+            (int)(newBatPosition.Y + (_bat.Height * 0.5f)),
+            (int)(_bat.Width * 0.5f)
+        );
+
+        Vector2 normal = Vector2.Zero;
+
+        if (batBounds.Left < _roomBounds.Left)
+        {
+            normal.X = Vector2.UnitX.X;
+            newBatPosition.X = _roomBounds.Left;
+        }
+        else if (batBounds.Right > _roomBounds.Right)
+        {
+            normal.X = -Vector2.UnitX.X;
+            newBatPosition.X = _roomBounds.Right - _bat.Width;
+        }
+
+        if (batBounds.Top < _roomBounds.Top)
+        {
+            normal.Y = Vector2.UnitY.Y;
+            newBatPosition.Y = _roomBounds.Top;
+        }
+        else if (batBounds.Bottom > _roomBounds.Bottom)
+        {
+            normal.Y = -Vector2.UnitY.Y;
+            newBatPosition.Y = _roomBounds.Bottom - _bat.Height;
+        }
+
+        if (normal != Vector2.Zero)
+        {
+            normal.Normalize();
+            _batVelocity = Vector2.Reflect(_batVelocity, normal);
+        }
+
+        _batPosition = newBatPosition;
+
+        if (slimeBounds.Intersects(batBounds))
+        {
+            // int totalColums = GraphicsDevice.PresentationParameters.BackBufferWidth / (int)_bat.Width;
+            // int totalRows = GraphicsDevice.PresentationParameters.BackBufferHeight / (int)_bat.Height;
+
+            // int column = Random.Shared.Next(0, totalColums);
+            // int row = Random.Shared.Next(0, totalRows);
+
+            int column = Random.Shared.Next(1, _tilemap.Columns - 1);
+            int row = Random.Shared.Next(1, _tilemap.Rows - 1);
+
+            _batPosition = new Vector2(column * _bat.Width, row * _bat.Height);
+
+            AssignRandomBatVelocity();
+        }
+    }
+
+    private void AssignRandomBatVelocity()
+    {
+        float angle = (float)(Random.Shared.NextDouble() * Math.PI * 2);
+
+        float x = (float)Math.Cos(angle);
+        float y = (float)Math.Sin(angle);
+        Vector2 direction = new Vector2(x, y);
+
+        _batVelocity = direction * MOVEMENT_SPEED;
     }
 
     private void CheckKeyboardInput()
     {
-        KeyboardState keyboardState = Keyboard.GetState();
+        Vector2 direction = Vector2.Zero;
 
         float speed = MOVEMENT_SPEED;
-        if (keyboardState.IsKeyDown(Keys.Space) && _previousKeyboardState.IsKeyUp(Keys.Space)) 
+
+        if (Input.Keyboard.IsKeyDown(Keys.W) || Input.Keyboard.IsKeyDown(Keys.Up))
         {
-            // speed *= 5.0f;
-            _slimePosition.Y -= 100.0f;
+            direction.Y -= 1;
+        }
+        if (Input.Keyboard.IsKeyDown(Keys.S) || Input.Keyboard.IsKeyDown(Keys.Down))
+        {
+            direction.Y += 1;
+        }
+        if (Input.Keyboard.IsKeyDown(Keys.A) || Input.Keyboard.IsKeyDown(Keys.Left))
+        {
+            direction.X -= 1;
+        }
+        if (Input.Keyboard.IsKeyDown(Keys.D) || Input.Keyboard.IsKeyDown(Keys.Right))
+        {
+            direction.X += 1;
         }
 
-        if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+        if (direction != Vector2.Zero || Input.Keyboard.WasKeyJustPressed(Keys.Space))
         {
-            _slimePosition.Y -= speed;
+            _slime.Animation = _entityAtlas.GetAnimation("slime_move");
+
+            if (direction.X < 0) _slime.Effects = SpriteEffects.FlipHorizontally;
+            else if (direction.X > 0) _slime.Effects = SpriteEffects.None;
+
+        } else
+        {
+            _slime.Animation = _entityAtlas.GetAnimation("slime_idle");
         }
 
-        if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+        if (direction != Vector2.Zero)
         {
-            _slimePosition.Y += speed;
+            direction.Normalize();
         }
 
-        if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
+
+        if (Input.Keyboard.WasKeyJustPressed(Keys.Space))
         {
-            _slimePosition.X -= speed;
+            speed *= 50.0f;
+        }
+        else
+        {
+            speed = MOVEMENT_SPEED;
         }
 
-        if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
-        {
-            _slimePosition.X += speed;
-        }
-
-        _previousKeyboardState = keyboardState;
+        _slimePosition += direction * speed;
     }
 
+    // ! Deprecated
     private void CheckKeyboardInputWithInputBufferTest()
     {
         _inputBuffer = new Queue<Vector2>(MAX_BUFFER_SIZE);
@@ -181,44 +318,45 @@ public class Game1 : Core
         }
     }
 
+    // ! Not Tested
     private void CheckGamePadInput()
     {
-        GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
+        GamePadInfo gamePadOne = Input.GamePads[(int)PlayerIndex.One];
 
         float speed = MOVEMENT_SPEED;
-        if (gamePadState.IsButtonDown(Buttons.A))
+        if (gamePadOne.WasButtonJustPressed(Buttons.A))
         {
-            speed *= 1.5f;
-            GamePad.SetVibration(PlayerIndex.One, 1.0f, 1.0f);
+            speed *= 50.0f;
+            gamePadOne.SetVibration(1.0f, TimeSpan.FromSeconds(1));
         }
         else
         {
-            GamePad.SetVibration(PlayerIndex.One, 0.0f, 0.0f);
+            gamePadOne.SetVibration(1.0f, TimeSpan.FromSeconds(1));
         }
 
-        if (gamePadState.ThumbSticks.Left != Vector2.Zero)
+        if (gamePadOne.LeftThumbStick != Vector2.Zero)
         {
-            _slimePosition.X += gamePadState.ThumbSticks.Left.X * speed;
-            _slimePosition.Y -= gamePadState.ThumbSticks.Left.Y * speed;
+            _slimePosition.X += gamePadOne.LeftThumbStick.X * speed;
+            _slimePosition.Y -= gamePadOne.LeftThumbStick.Y * speed;
         }
         else
         {
-            if (gamePadState.IsButtonDown(Buttons.DPadUp))
+            if (gamePadOne.IsButtonDown(Buttons.DPadUp))
             {
                 _slimePosition.Y -= speed;
             }
 
-            if (gamePadState.IsButtonDown(Buttons.DPadDown))
+            if (gamePadOne.IsButtonDown(Buttons.DPadDown))
             {
                 _slimePosition.Y += speed;
             }
 
-            if (gamePadState.IsButtonDown(Buttons.DPadLeft))
+            if (gamePadOne.IsButtonDown(Buttons.DPadLeft))
             {
                 _slimePosition.X -= speed;
             }
 
-            if (gamePadState.IsButtonDown(Buttons.DPadLeft))
+            if (gamePadOne.IsButtonDown(Buttons.DPadLeft))
             {
                 _slimePosition.X += speed;
             }
@@ -232,7 +370,7 @@ public class Game1 : Core
     /// <param name="gameTime">Informasi tentang waktu permainan (delta time, total time)</param>
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.Gray);
+        GraphicsDevice.Clear(Color.DeepSkyBlue);
 
         // Rectangle IconSourceRect = new(0, 0, 128, 128);
         // Rectangle WordmarkSourceRect = new(150, 34, 458, 58);
@@ -283,23 +421,25 @@ public class Game1 : Core
         //     0.0f
         // );
 
+        _tilemap.Draw(SpriteBatch);
+
         _slime.Draw(SpriteBatch, _slimePosition);
         _bat.Draw(SpriteBatch, _batPosition);
 
-        SpriteBatch.Draw(_logo_se,
-            new Vector2(
-                Window.ClientBounds.Width,
-                10) * 0.5f,
-            null,
-            Color.White,
-            0.0f,
-            new Vector2(
-                _logo_se.Width,
-                0) * 0.5f,
-            0.4f,
-            SpriteEffects.None,
-            1.0f
-        );
+        // SpriteBatch.Draw(_logo_se,
+        //     new Vector2(
+        //         Window.ClientBounds.Width,
+        //         10) * 0.5f,
+        //     null,
+        //     Color.White,
+        //     0.0f,
+        //     new Vector2(
+        //         _logo_se.Width,
+        //         0) * 0.5f,
+        //     0.4f,
+        //     SpriteEffects.None,
+        //     1.0f
+        // );
 
         SpriteBatch.End();
 
