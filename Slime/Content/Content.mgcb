@@ -13,6 +13,27 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin audio/bounce.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/bounce.wav
+
+#begin audio/collect.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/collect.wav
+
+#begin audio/theme.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:audio/theme.ogg
+
+#begin entity.xml
+/copy:entity.xml
+
 #begin images/entity/atlas_entity.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -24,9 +45,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:images/entity/atlas_entity.png;images/atlas_entity.png
-
-#begin entity.xml
-/copy:entity.xml;entity.xml
 
 #begin images/HorizontalLogo_64px.png
 /importer:TextureImporter
@@ -64,4 +82,6 @@
 /processorParam:TextureFormat=Color
 /build:images/map/tree.png;images/tree.png
 
-/copy:tilemap-def.xml;tilemap-def.xml
+#begin tilemap-def.xml
+/copy:tilemap-def.xml
+
