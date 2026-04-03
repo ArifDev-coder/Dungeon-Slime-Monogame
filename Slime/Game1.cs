@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using Slime.Graphics;
 using Slime.Input;
 using Slime;
@@ -15,19 +17,26 @@ namespace Slime;
 /// </summary>
 public class Game1 : Core
 {
+    // Texture Atlas
     private TextureAtlas _entityAtlas;
 
+    // Sprite
     private AnimatedSprite _slime;
     private AnimatedSprite _bat;
 
+    // Sprite Position
     private Vector2 _slimePosition;
     private Vector2 _batPosition;
     private Vector2 _batVelocity;
     private Tilemap _tilemap;
     private Rectangle _roomBounds;
 
-    private const float MOVEMENT_SPEED = 1.0f;
+    // Audio
+    private SoundEffect _bounceSoundEffect;
+    private SoundEffect _collectSoundEffect;
 
+    // Config
+    private const float MOVEMENT_SPEED = 4.0f;
     // Input Buffer
     private Queue<Vector2> _inputBuffer;
     private const int MAX_BUFFER_SIZE = 2;
@@ -85,13 +94,26 @@ public class Game1 : Core
         // _slime1 = atlas.GetRegion("slime1");
 
         _slime = _entityAtlas.CreateAnimatedSprite("slime_idle");
-        _slime.Scale = new Vector2(1.0f, 1.0f);
+        _slime.Scale = new Vector2(2.0f, 2.0f);
 
         _bat = _entityAtlas.CreateAnimatedSprite("bat_basic");
-        _bat.Scale = new Vector2(1.0f, 1.0f);
+        _bat.Scale = new Vector2(2.0f, 2.0f);
 
         _tilemap = Tilemap.FromFile(Content, "tilemap-def.xml");
         _tilemap.Scale = new Vector2(5.0f, 5.0f);
+
+        _bounceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
+        _collectSoundEffect = Content.Load<SoundEffect>("audio/collect");
+        Song theme = Content.Load<Song>("audio/theme");
+
+        if (MediaPlayer.State == MediaState.Playing)
+        {
+            MediaPlayer.Stop();
+        }
+
+        MediaPlayer.Play(theme);
+
+        MediaPlayer.IsRepeating = true;
     }
 
     /// <summary>
@@ -190,6 +212,8 @@ public class Game1 : Core
         {
             normal.Normalize();
             _batVelocity = Vector2.Reflect(_batVelocity, normal);
+
+            _bounceSoundEffect.Play();
         }
 
         _batPosition = newBatPosition;
@@ -208,6 +232,8 @@ public class Game1 : Core
             _batPosition = new Vector2(column * _bat.Width, row * _bat.Height);
 
             AssignRandomBatVelocity();
+
+            _collectSoundEffect.Play();
         }
     }
 
@@ -265,11 +291,11 @@ public class Game1 : Core
 
         if (Input.Keyboard.WasKeyJustPressed(Keys.Space))
         {
-            speed *= 50.0f;
+            speed *= 25.0f;
         }
         else
         {
-            speed = MOVEMENT_SPEED;
+            speed = MOVEMENT_SPEED - 2.0f;
         }
 
         _slimePosition += direction * speed;
