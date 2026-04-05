@@ -32,8 +32,9 @@ public class Game1 : Core
     private Rectangle _roomBounds;
 
     // Audio
-    private SoundEffect _bounceSoundEffect;
+    private SoundEffect _baunceSoundEffect;
     private SoundEffect _collectSoundEffect;
+    private Song _themeSong;
 
     // Config
     private const float MOVEMENT_SPEED = 4.0f;
@@ -78,6 +79,8 @@ public class Game1 : Core
         _batPosition = new Vector2(_roomBounds.Left, _roomBounds.Top);
 
         AssignRandomBatVelocity();
+
+        Audio.PlaySong(_themeSong);
     }
 
     /// <summary>
@@ -102,18 +105,9 @@ public class Game1 : Core
         _tilemap = Tilemap.FromFile(Content, "tilemap-def.xml");
         _tilemap.Scale = new Vector2(5.0f, 5.0f);
 
-        _bounceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
+        _baunceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
         _collectSoundEffect = Content.Load<SoundEffect>("audio/collect");
-        Song theme = Content.Load<Song>("audio/theme");
-
-        if (MediaPlayer.State == MediaState.Playing)
-        {
-            MediaPlayer.Stop();
-        }
-
-        MediaPlayer.Play(theme);
-
-        MediaPlayer.IsRepeating = true;
+        _themeSong = Content.Load<Song>("audio/theme");
     }
 
     /// <summary>
@@ -213,7 +207,7 @@ public class Game1 : Core
             normal.Normalize();
             _batVelocity = Vector2.Reflect(_batVelocity, normal);
 
-            _bounceSoundEffect.Play();
+            Audio.PlaySoundEffect(_baunceSoundEffect);
         }
 
         _batPosition = newBatPosition;
@@ -233,7 +227,7 @@ public class Game1 : Core
 
             AssignRandomBatVelocity();
 
-            _collectSoundEffect.Play();
+            Audio.PlaySoundEffect(_collectSoundEffect);
         }
     }
 
@@ -278,9 +272,27 @@ public class Game1 : Core
             if (direction.X < 0) _slime.Effects = SpriteEffects.FlipHorizontally;
             else if (direction.X > 0) _slime.Effects = SpriteEffects.None;
 
-        } else
+        }
+        else
         {
             _slime.Animation = _entityAtlas.GetAnimation("slime_idle");
+        }
+
+        if (Input.Keyboard.WasKeyJustPressed(Keys.M))
+        {
+            Audio.ToggleMute();
+        }
+
+        if (Input.Keyboard.WasKeyJustPressed(Keys.OemPlus))
+        {
+            Audio.SongVolume += 0.1f;
+            Audio.SoundEffectVolume += 0.1f;
+        }
+
+        if (Input.Keyboard.WasKeyJustPressed(Keys.OemMinus))
+        {
+            Audio.SongVolume -= 0.1f;
+            Audio.SoundEffectVolume -= 0.1f;
         }
 
         if (direction != Vector2.Zero)
