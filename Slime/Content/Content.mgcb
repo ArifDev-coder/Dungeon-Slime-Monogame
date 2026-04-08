@@ -34,6 +34,20 @@
 #begin entity.xml
 /copy:entity.xml
 
+#begin fonts/04B_30.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/04B_30.spritefont
+
+#begin fonts/Roboto.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/Roboto.spritefont
+
 #begin images/entity/atlas_entity.png
 /importer:TextureImporter
 /processor:TextureProcessor
