@@ -68,6 +68,8 @@ public class Game1 : Core
 
         Rectangle screenBounds = GraphicsDevice.PresentationParameters.Bounds;
 
+        _tilemap.Scale = new Vector2(5.0f, 5.0f);
+
         _roomBounds = new Rectangle(
             (int)_tilemap.TileWidth,
             (int)_tilemap.TileHeight,
@@ -112,7 +114,7 @@ public class Game1 : Core
         // _slime1 = atlas.GetRegion("slime1");
 
         _slime = _entityAtlas.CreateAnimatedSprite("slime_idle");
-        _slime.Scale = new Vector2(4.0f, 4.0f);
+        _slime.Scale = new Vector2(2.0f, 2.0f);
 
         _bat = _entityAtlas.CreateAnimatedSprite("bat_basic");
         _bat.Scale = new Vector2(2.0f, 2.0f);
@@ -287,8 +289,8 @@ public class Game1 : Core
         {
             _slime.Animation = _entityAtlas.GetAnimation("slime_move");
 
-            if (direction.X < 0) _slime.Effects = SpriteEffects.FlipHorizontally;
-            else if (direction.X > 0) _slime.Effects = SpriteEffects.None;
+            // if (direction.X < 0) _slime.Effects = SpriteEffects.FlipHorizontally;
+            // else if (direction.X > 0) _slime.Effects = SpriteEffects.None;
 
         }
         else
