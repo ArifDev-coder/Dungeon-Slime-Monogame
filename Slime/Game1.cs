@@ -428,7 +428,7 @@ public class Game1 : Core
     /// <param name="gameTime">Informasi tentang waktu permainan (delta time, total time)</param>
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.DeepSkyBlue);
+        GraphicsDevice.Clear(Color.Black);
 
         // Rectangle IconSourceRect = new(0, 0, 128, 128);
         // Rectangle WordmarkSourceRect = new(150, 34, 458, 58);
