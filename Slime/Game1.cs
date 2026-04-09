@@ -101,8 +101,6 @@ public class Game1 : Core
     {
         base.LoadContent();
 
-        // TEST
-
         // Texture Atlas
         _entityAtlas = TextureAtlas.FromFile(Content, "entity.xml");
 
