@@ -40,7 +40,7 @@
 /processorParam:TextureFormat=Color
 /build:images/HorizontalLogo_64px.png;images/logomg.png
 
-#begin images/map/grass_sheet.png
+#begin images/map/basic_tileset.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -50,18 +50,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/map/grass_sheet.png;images/grass_sheet.png
-
-#begin images/map/tree.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/map/tree.png;images/tree.png
+/build:images/map/basic_tileset.png;images/basic_tileset.png
 
 /copy:tilemap-def.xml;tilemap-def.xml
+/copy:map1.xml;map1.xml
