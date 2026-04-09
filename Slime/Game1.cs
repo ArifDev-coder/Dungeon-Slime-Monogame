@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using Slime.Graphics;
 using Slime.Input;
 using Slime;
@@ -15,19 +17,33 @@ namespace Slime;
 /// </summary>
 public class Game1 : Core
 {
+    // Texture Atlas
     private TextureAtlas _entityAtlas;
 
+    // Sprite
     private AnimatedSprite _slime;
     private AnimatedSprite _bat;
 
+    // Fonts
+    SpriteFont _font;
+    private int _score;
+    private Vector2 _scoreTextPosition;
+    private Vector2 _scoreTextOrigin;
+
+    // Sprite Position
     private Vector2 _slimePosition;
     private Vector2 _batPosition;
     private Vector2 _batVelocity;
     private Tilemap _tilemap;
     private Rectangle _roomBounds;
 
-    private const float MOVEMENT_SPEED = 1.0f;
+    // Audio
+    private SoundEffect _baunceSoundEffect;
+    private SoundEffect _collectSoundEffect;
+    private Song _themeSong;
 
+    // Config
+    private const float MOVEMENT_SPEED = 4.0f;
     // Input Buffer
     private Queue<Vector2> _inputBuffer;
     private const int MAX_BUFFER_SIZE = 2;
@@ -69,6 +85,12 @@ public class Game1 : Core
         _batPosition = new Vector2(_roomBounds.Left, _roomBounds.Top);
 
         AssignRandomBatVelocity();
+
+        Audio.PlaySong(_themeSong);
+
+        _scoreTextPosition = new Vector2(_roomBounds.Left, _tilemap.TileHeight * 0.5f);
+        float scoreTextYOrigin = _font.MeasureString("Score").Y * 0.5f;
+        _scoreTextOrigin = new Vector2(0, scoreTextYOrigin);
     }
 
     /// <summary>
@@ -79,19 +101,30 @@ public class Game1 : Core
     {
         base.LoadContent();
 
+        // Texture Atlas
         _entityAtlas = TextureAtlas.FromFile(Content, "entity.xml");
 
+        // Fonts
+        _font = Content.Load<SpriteFont>("fonts/04B_30");
+
+        // Sprite
         // _slime0 = atlas.GetRegion("slime0");
         // _slime1 = atlas.GetRegion("slime1");
 
         _slime = _entityAtlas.CreateAnimatedSprite("slime_idle");
-        _slime.Scale = new Vector2(1.0f, 1.0f);
+        _slime.Scale = new Vector2(2.0f, 2.0f);
 
         _bat = _entityAtlas.CreateAnimatedSprite("bat_basic");
-        _bat.Scale = new Vector2(1.0f, 1.0f);
+        _bat.Scale = new Vector2(2.0f, 2.0f);
 
+        // Tilemap
         _tilemap = Tilemap.FromFile(Content, "tilemap-def.xml");
         _tilemap.Scale = new Vector2(5.0f, 5.0f);
+
+        // Audio
+        _baunceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
+        _collectSoundEffect = Content.Load<SoundEffect>("audio/collect");
+        _themeSong = Content.Load<Song>("audio/theme");
     }
 
     /// <summary>
@@ -190,6 +223,8 @@ public class Game1 : Core
         {
             normal.Normalize();
             _batVelocity = Vector2.Reflect(_batVelocity, normal);
+
+            Audio.PlaySoundEffect(_baunceSoundEffect);
         }
 
         _batPosition = newBatPosition;
@@ -208,6 +243,10 @@ public class Game1 : Core
             _batPosition = new Vector2(column * _bat.Width, row * _bat.Height);
 
             AssignRandomBatVelocity();
+
+            Audio.PlaySoundEffect(_collectSoundEffect);
+
+            _score += 1;
         }
     }
 
@@ -252,9 +291,27 @@ public class Game1 : Core
             if (direction.X < 0) _slime.Effects = SpriteEffects.FlipHorizontally;
             else if (direction.X > 0) _slime.Effects = SpriteEffects.None;
 
-        } else
+        }
+        else
         {
             _slime.Animation = _entityAtlas.GetAnimation("slime_idle");
+        }
+
+        if (Input.Keyboard.WasKeyJustPressed(Keys.M))
+        {
+            Audio.ToggleMute();
+        }
+
+        if (Input.Keyboard.WasKeyJustPressed(Keys.OemPlus))
+        {
+            Audio.SongVolume += 0.1f;
+            Audio.SoundEffectVolume += 0.1f;
+        }
+
+        if (Input.Keyboard.WasKeyJustPressed(Keys.OemMinus))
+        {
+            Audio.SongVolume -= 0.1f;
+            Audio.SoundEffectVolume -= 0.1f;
         }
 
         if (direction != Vector2.Zero)
@@ -265,11 +322,11 @@ public class Game1 : Core
 
         if (Input.Keyboard.WasKeyJustPressed(Keys.Space))
         {
-            speed *= 50.0f;
+            speed *= 25.0f;
         }
         else
         {
-            speed = MOVEMENT_SPEED;
+            speed = MOVEMENT_SPEED - 2.0f;
         }
 
         _slimePosition += direction * speed;
@@ -422,6 +479,19 @@ public class Game1 : Core
         // );
 
         _tilemap.Draw(SpriteBatch);
+
+        // Message Score
+        SpriteBatch.DrawString(
+            _font,                      // Font
+            $"Score: {_score}",         // Text
+            _scoreTextPosition,         // Position
+            Color.White,                // Color
+            0.0f,                       // Rotation
+            _scoreTextOrigin,           // Origin
+            1.0f,                       // Scale
+            SpriteEffects.None,         // Effects
+            0.0f                        // LayerDepth   
+        );
 
         _slime.Draw(SpriteBatch, _slimePosition);
         _bat.Draw(SpriteBatch, _batPosition);
