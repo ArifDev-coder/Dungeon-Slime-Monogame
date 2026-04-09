@@ -118,7 +118,7 @@ public class Game1 : Core
         _bat.Scale = new Vector2(2.0f, 2.0f);
 
         // Tilemap
-        _tilemap = Tilemap.FromFile(Content, "tilemap-def.xml");
+        _tilemap = Tilemap.FromFile(Content, "map_1.xml");
         _tilemap.Scale = new Vector2(5.0f, 5.0f);
 
         // Audio

@@ -82,8 +82,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:/images/map/basic_tilset.png;images/basic_tilset.png
+/build:images/map/basic_tileset.png;images/basic_tileset.png
 
 #begin tilemap-def.xml
 /copy:tilemap-def.xml
 
+/copy:map_1.xml
