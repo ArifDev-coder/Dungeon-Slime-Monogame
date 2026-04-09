@@ -112,14 +112,13 @@ public class Game1 : Core
         // _slime1 = atlas.GetRegion("slime1");
 
         _slime = _entityAtlas.CreateAnimatedSprite("slime_idle");
-        _slime.Scale = new Vector2(2.0f, 2.0f);
+        _slime.Scale = new Vector2(4.0f, 4.0f);
 
         _bat = _entityAtlas.CreateAnimatedSprite("bat_basic");
         _bat.Scale = new Vector2(2.0f, 2.0f);
 
         // Tilemap
         _tilemap = Tilemap.FromFile(Content, "map_1.xml");
-        _tilemap.Scale = new Vector2(5.0f, 5.0f);
 
         // Audio
         _baunceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
@@ -155,7 +154,7 @@ public class Game1 : Core
         //     GraphicsDevice.PresentationParameters.BackBufferHeight
         // );
 
-        Circle slimeBounds = new Circle(
+        Circle slimeBounds = new(
             (int)(_slimePosition.X + (_slime.Width * 0.5f)),
             (int)(_slimePosition.Y + (_slime.Height * 0.5f)),
             (int)(_slime.Width * 0.5f)
