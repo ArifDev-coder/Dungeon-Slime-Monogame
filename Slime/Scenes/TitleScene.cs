@@ -30,11 +30,11 @@ public class TitleScene : Scene
 
         Vector2 size = _font.MeasureString(DUNGEON_TEXT);
         _dungeonTextPos = new(640, 100);
-        _dungeonTextOrigin = size * titleMultiplyFontSize * 0.5f;
+        _dungeonTextOrigin = size * 0.5f;
 
         size = _font.MeasureString(SLIME_TEXT);
         _slimeTextPos = new(757, 207);
-        _slimeTextOrigin = size * titleMultiplyFontSize * 0.5f;
+        _slimeTextOrigin = size * 0.5f;
 
         size = _font.MeasureString(PRESS_ENTER_TEXT);
         _pressEnterPos = new(640, 620);
@@ -66,7 +66,7 @@ public class TitleScene : Scene
 
         Core.SpriteBatch.DrawString(_font, DUNGEON_TEXT, _dungeonTextPos + new Vector2(10, 10), dropShadowColor, 0.0f, _dungeonTextOrigin, titleMultiplyFontSize, SpriteEffects.None, 1.0f);
 
-        Core.SpriteBatch.DrawString(_font, DUNGEON_TEXT, _dungeonTextOrigin, Color.White, 0.0f, _dungeonTextOrigin, titleMultiplyFontSize, SpriteEffects.None, 1.0f);
+        Core.SpriteBatch.DrawString(_font, DUNGEON_TEXT, _dungeonTextPos, Color.White, 0.0f, _dungeonTextOrigin, titleMultiplyFontSize, SpriteEffects.None, 1.0f);
 
         Core.SpriteBatch.DrawString(_font, SLIME_TEXT, _slimeTextPos + new Vector2(10, 10), dropShadowColor, 0.0f, _slimeTextOrigin, titleMultiplyFontSize, SpriteEffects.None, 1.0f);
 
