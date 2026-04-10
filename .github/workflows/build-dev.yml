@@ -39,7 +39,7 @@ jobs:
 
       - name: Archive Windows build as ZIP
         run: |
-          Compress-Archive -Path Slime/bin/Release/net10.0-windows/win-x64/publish/ `
+          Compress-Archive -Path Slime/bin/Release/net10.0/win-x64/publish/ `
                            -DestinationPath DungeonSlime-Windows.zip
 
       - name: Upload Windows Artifact
