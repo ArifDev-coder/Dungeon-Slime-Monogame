@@ -35,15 +35,11 @@ jobs:
 
       - name: Publish game for Windows (self-contained)
         run: |
-          dotnet publish -c Release `
-                         -r win-x64 `
-                         -p:PublishReadyToRun=false `
-                         -p:TieredCompilation=false `
-                         --self-contained
+          dotnet publish -c Release -r win-x64 -p:PublishReadyToRun=false -p:TieredCompilation=false --self-contained
 
       - name: Archive Windows build as ZIP
         run: |
-          Compress-Archive -Path Slime/bin/Release/net10.0-windows/win-x64/publish/* `
+          Compress-Archive -Path bin/Release/net10.0-windows/win-x64/publish/* `
                            -DestinationPath DungeonSlime-Windows.zip
 
       - name: Upload Windows Artifact
@@ -76,15 +72,11 @@ jobs:
 
       - name: Publish game for Linux (self-contained)
         run: |
-          dotnet publish -c Release `
-                         -r linux-x64 `
-                         -p:PublishReadyToRun=false `
-                         -p:TieredCompilation=false `
-                         --self-contained
+          dotnet publish -c Release -r linux-x64 -p:PublishReadyToRun=false -p:TieredCompilation=false --self-contained
 
       - name: Archive Linux build as .tar.gz (preserves permissions)
         run: |
-          tar -czvf DungeonSlime-Linux.tar.gz -C Slime/bin/Release/net10.0/linux-x64/publish .
+          tar -czvf DungeonSlime-Linux.tar.gz -C bin/Release/net10.0/linux-x64/publish/ .
 
       - name: Upload Linux Artifact
         uses: actions/upload-artifact@v4
