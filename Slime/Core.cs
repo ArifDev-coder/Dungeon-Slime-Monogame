@@ -90,7 +90,8 @@ public class Core : Game
 
         GamePadInfo gamePadOne = Input.GamePads[(int)PlayerIndex.One];
 
-        if (ExitOnEscape && Input.Keyboard.IsKeyDown(Keys.Escape) || ExitOnEscape && gamePadOne.IsButtonDown(Buttons.Back))
+        if (ExitOnEscape && (Input.Keyboard.WasKeyJustPressed(Keys.Escape) || ExitOnEscape && gamePadOne.WasButtonJustPressed
+        (Buttons.Back)))
         {
             Exit();
         }
