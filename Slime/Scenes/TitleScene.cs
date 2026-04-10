@@ -11,7 +11,7 @@ public class TitleScene : Scene
     private const string DUNGEON_TEXT = "Dungeon";
     private const string SLIME_TEXT = "Slime";
     private const string PRESS_ENTER_TEXT = "Press Enter To Start";
-    private const float titleMultiplyFontSize = 5f;
+    private const float titleMultiplyFontSize = 5.0f;
 
     private SpriteFont _font;
 
