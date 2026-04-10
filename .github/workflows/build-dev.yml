@@ -1,0 +1,52 @@
+name: Build & Test MonoGame Project
+
+on:
+  push:
+    branches: [ "dev", "stable", ]
+  pull_request:
+    branches: [ "dev", "stable" ]
+  workflow_dispatch:  # biar bisa di-run manual dari GitHub
+
+jobs:
+  build:
+    name: Build on Windows
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8.0
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0
+
+      - name: Install MonoGame templates
+        run: dotnet new install MonoGame.Templates.CSharp
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project (Debug)
+        run: dotnet build --configuration Debug --no-restore
+
+      - name: Upload build artifacts (Debug)
+        uses: actions/upload-artifact@v4
+        with:
+          name: DungeonSlime-Debug
+          path: |
+            **/bin/Debug/net10.0-windows/*
+            !**/bin/Debug/net10.0-windows/*.pdb
+          retention-days: 7
+
+      - name: Build project (Release)
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Upload build artifacts (Release)
+        uses: actions/upload-artifact@v4
+        with:
+          name: DungeonSlime-Release
+          path: |
+            **/bin/Release/net10.0-windows/*
+            !**/bin/Release/net10.0-windows/*.pdb
+          retention-days: 7
