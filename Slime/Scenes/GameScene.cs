@@ -98,7 +98,7 @@ public class GameScene : Scene
         _bat.Scale = new Vector2(2.0f, 2.0f);
 
         // Tilemap
-        _tilemap = Tilemap.FromFile(Content, "map_1.xml");
+        _tilemap = Tilemap.FromFile(Content, "tilemap.xml");
 
         // Audio
         _baunceSoundEffect = Content.Load<SoundEffect>("audio/bounce");

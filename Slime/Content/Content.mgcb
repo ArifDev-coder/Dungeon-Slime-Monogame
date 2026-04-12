@@ -48,7 +48,7 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/Roboto.spritefont
 
-#begin images/entity/atlas_entity.png
+#begin images/main.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -58,33 +58,6 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/entity/atlas_entity.png;images/atlas_entity.png
+/build:images/main.png;
 
-#begin images/HorizontalLogo_64px.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/HorizontalLogo_64px.png;images/logomg.png
-
-#begin images/map/basic_tilset.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/map/basic_tileset.png;images/basic_tileset.png
-
-#begin tilemap-def.xml
-/copy:tilemap-def.xml
-
-/copy:map_1.xml
+/copy:tilemap.xml
