@@ -30,6 +30,8 @@ public class GameScene : Scene
     private int _score;
     private Vector2 _scoreTextPosition;
     private Vector2 _scoreTextOrigin;
+    private Vector2 _cooldownTextPosition;
+    private Vector2 _cooldownTextOrigin;
 
     // Sprite Position
     private Vector2 _slimePosition;
@@ -37,9 +39,14 @@ public class GameScene : Scene
     private Vector2 _batVelocity;
     private Tilemap _tilemap;
     private Rectangle _roomBounds;
+    private float lastDashTime = -DASH_COOLDWON;
 
     // Config
-    private const float MOVEMENT_SPEED = 4.0f;
+    private const float SLIME_MOVEMENT = 7.0f;
+    private const float BAT_MOVEMENT = 9.0f;
+    private const float DASH_COOLDWON = 1.0f; // in seconds
+    private bool isCooldown = false;
+
     // Input Buffer
     private Queue<Vector2> _inputBuffer;
     private const int MAX_BUFFER_SIZE = 2;
@@ -71,9 +78,14 @@ public class GameScene : Scene
         _batPosition = new Vector2(_roomBounds.Left, _roomBounds.Top);
 
         _scoreTextPosition = new Vector2(_roomBounds.Left, _tilemap.TileHeight * 0.5f);
+        _cooldownTextPosition = new Vector2(_roomBounds.Right, _tilemap.TileHeight * 0.5f);
 
         float scoreTextYOrigin = _font.MeasureString("Score").Y * 0.5f;
+        float cooldownTextYOrigin = _font.MeasureString("Dash Cooldown").Y * 0.5f;
+        float cooldownTextXOrigin = _font.MeasureString("Dash Cooldown").X;
+
         _scoreTextOrigin = new Vector2(0, scoreTextYOrigin);
+        _cooldownTextOrigin = new Vector2(cooldownTextXOrigin, cooldownTextYOrigin);
 
         AssignRandomBatVelocity();
     }
@@ -114,7 +126,7 @@ public class GameScene : Scene
     /// <param name="gameTime">Informasi tentang waktu permainan (delta time, total time)</param>
     public override void Update(GameTime gameTime)
     {
-        CheckKeyboardInput();
+        CheckKeyboardInput(gameTime);
         // CheckKeyboardInputWithInputBufferTest();
         CheckGamePadInput();
         EnemyAI();
@@ -234,17 +246,17 @@ public class GameScene : Scene
 
         float x = (float)Math.Cos(angle);
         float y = (float)Math.Sin(angle);
-        Vector2 direction = new Vector2(x, y);
+        Vector2 direction = new(x, y);
 
-        _batVelocity = direction * MOVEMENT_SPEED;
+        _batVelocity = direction * BAT_MOVEMENT;
     }
 
-    private void CheckKeyboardInput()
+    private void CheckKeyboardInput(GameTime gameTime)
     {
         Vector2 direction = Vector2.Zero;
         KeyboardInfo Keyboard = Core.Input.Keyboard;
 
-        float speed = MOVEMENT_SPEED;
+        float speed = SLIME_MOVEMENT;
 
         if (Keyboard.WasKeyJustPressed(Keys.Escape))
         {
@@ -268,7 +280,7 @@ public class GameScene : Scene
             direction.X += 1;
         }
 
-        if (direction != Vector2.Zero || Keyboard.WasKeyJustPressed(Keys.Space))
+        if (direction != Vector2.Zero)
         {
             _slime.Animation = _entityAtlas.GetAnimation("slime_move");
 
@@ -304,14 +316,23 @@ public class GameScene : Scene
         }
 
 
-        if (Keyboard.WasKeyJustPressed(Keys.Space))
+        float currentDashTime = (float)gameTime.TotalGameTime.TotalSeconds;
+
+        if (currentDashTime - lastDashTime >= DASH_COOLDWON)
         {
-            speed *= 25.0f;
-            Core.Audio.PlaySoundEffect(_dashSoundEffect);
+            if (Keyboard.WasKeyJustPressed(Keys.Space) && direction != Vector2.Zero)
+            {
+                speed *= 25.0f;
+                Core.Audio.PlaySoundEffect(_dashSoundEffect);
+
+                lastDashTime = currentDashTime;
+            }
+            isCooldown = false;
         }
         else
         {
-            speed = MOVEMENT_SPEED - 2.0f;
+            isCooldown = true;
+            speed = SLIME_MOVEMENT;
         }
 
         _slimePosition += direction * speed;
@@ -325,7 +346,7 @@ public class GameScene : Scene
         KeyboardState keyboardState = Keyboard.GetState();
         Vector2 newDirection = Vector2.Zero;
 
-        float speed = MOVEMENT_SPEED;
+        float speed = SLIME_MOVEMENT;
         if (keyboardState.IsKeyDown(Keys.Space))
         {
             speed *= 1.5f;
@@ -365,7 +386,7 @@ public class GameScene : Scene
     {
         GamePadInfo gamePadOne = Core.Input.GamePads[(int)PlayerIndex.One];
 
-        float speed = MOVEMENT_SPEED;
+        float speed = SLIME_MOVEMENT;
         if (gamePadOne.WasButtonJustPressed(Buttons.A))
         {
             speed *= 50.0f;
@@ -481,6 +502,21 @@ public class GameScene : Scene
 
         _slime.Draw(Core.SpriteBatch, _slimePosition);
         _bat.Draw(Core.SpriteBatch, _batPosition);
+
+        if (isCooldown)
+        {
+            Core.SpriteBatch.DrawString(
+            _font,                      // Font
+            "Dash Cooldown",         // Text
+            _cooldownTextPosition,         // Position
+            Color.White,                // Color
+            0.0f,                       // Rotation
+            _cooldownTextOrigin,           // Origin
+            1.0f,                       // Scale
+            SpriteEffects.None,         // Effects
+            0.0f                        // LayerDepth   
+        );
+        }
 
         // SpriteBatch.Draw(_logo_se,
         //     new Vector2(
