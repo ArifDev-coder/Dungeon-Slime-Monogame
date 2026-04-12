@@ -2,9 +2,9 @@ name: Publish Dungeon Slime Game
 
 on:
   push:
-    branches: [ "dev", "stable" ]      # Jalan setiap ada push ke branch dev
+    branches: [ "main" ]      # Jalan setiap ada push ke branch dev
   pull_request:
-    branches: [ "dev", "stable" ]
+    branches: [ "main" ]
   workflow_dispatch:         # Bisa dijalankan manual dari tab Actions
 
 env:
