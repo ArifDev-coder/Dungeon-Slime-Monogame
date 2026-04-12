@@ -50,6 +50,6 @@ public class Game1 : Core
     /// </summary>
     protected override void LoadContent()
     {
-        _themeSong = Content.Load<Song>("audio/theme");
+        _themeSong = Content.Load<Song>("audio/theme2");
     }
 }
