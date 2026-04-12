@@ -25,6 +25,16 @@
 /processorParam:Quality=Best
 /build:audio/collect.wav
 
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/collect2.wav
+
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/dash.wav
+
 #begin audio/theme.ogg
 /importer:OggImporter
 /processor:SongProcessor
@@ -35,7 +45,7 @@
 /importer:OggImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:audio/theme2.mp3
+/build:audio/theme2.ogg
 
 #begin entity.xml
 /copy:entity.xml

@@ -19,6 +19,7 @@ public class GameScene : Scene
     // Audio
     private SoundEffect _baunceSoundEffect;
     private SoundEffect _collectSoundEffect;
+    private SoundEffect _dashSoundEffect;
 
     // Sprite
     private AnimatedSprite _slime;
@@ -102,7 +103,8 @@ public class GameScene : Scene
 
         // Audio
         _baunceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
-        _collectSoundEffect = Content.Load<SoundEffect>("audio/collect");
+        _collectSoundEffect = Content.Load<SoundEffect>("audio/collect2");
+        _dashSoundEffect = Content.Load<SoundEffect>("audio/dash");
     }
 
     /// <summary>
@@ -305,6 +307,7 @@ public class GameScene : Scene
         if (Keyboard.WasKeyJustPressed(Keys.Space))
         {
             speed *= 25.0f;
+            Core.Audio.PlaySoundEffect(_dashSoundEffect);
         }
         else
         {
@@ -367,6 +370,7 @@ public class GameScene : Scene
         {
             speed *= 50.0f;
             gamePadOne.SetVibration(1.0f, TimeSpan.FromSeconds(1));
+            Core.Audio.PlaySoundEffect(_dashSoundEffect);
         }
         else
         {
