@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using Slime;
 using Slime.Graphics;
 using Slime.Input;
@@ -20,6 +21,7 @@ public class GameScene : Scene
     private SoundEffect _baunceSoundEffect;
     private SoundEffect _collectSoundEffect;
     private SoundEffect _dashSoundEffect;
+    private Song _themeGameSceneSong;
 
     // Sprite
     private AnimatedSprite _slime;
@@ -96,6 +98,10 @@ public class GameScene : Scene
 
         // Texture Atlas
         _entityAtlas = TextureAtlas.FromFile(Core.Content, "entity.xml");
+
+        // Audio
+        _themeGameSceneSong = Content.Load<Song>("audio/theme2");
+        Core.Audio.PlaySong(_themeGameSceneSong);
 
         // Fonts
         _font = Content.Load<SpriteFont>("fonts/04B_30");

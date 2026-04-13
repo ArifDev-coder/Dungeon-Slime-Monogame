@@ -41,11 +41,17 @@
 /processorParam:Quality=Best
 /build:audio/theme.ogg
 
-#begin audio/theme.ogg
+#begin audio/theme2.ogg
 /importer:OggImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:audio/theme2.ogg
+
+#begin audio/theme3.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:audio/theme3.ogg
 
 #begin entity.xml
 /copy:entity.xml

@@ -1,8 +1,11 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using Slime;
 using Slime.Scenes;
+using Slime.Audio;
 
 namespace Slime.Scenes;
 
@@ -21,6 +24,9 @@ public class TitleScene : Scene
     private Vector2 _slimeTextOrigin;
     private Vector2 _pressEnterPos;
     private Vector2 _pressEnterOrigin;
+
+    // Audio
+    private Song _titleGameSong;
 
     private Texture2D _backgroundPattern;
     private Rectangle _backgroundDestination;
@@ -55,6 +61,8 @@ public class TitleScene : Scene
 
         _backgroundPattern = Content.Load<Texture2D>("images/title/bg-pattern");
 
+        _titleGameSong = Content.Load<Song>("audio/theme3");
+        Core.Audio.PlaySong(_titleGameSong);
     }
 
     public override void Update(GameTime gameTime)
