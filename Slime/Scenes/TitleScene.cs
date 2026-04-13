@@ -1,8 +1,11 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using Slime;
 using Slime.Scenes;
+using Slime.Audio;
 
 namespace Slime.Scenes;
 
@@ -22,6 +25,14 @@ public class TitleScene : Scene
     private Vector2 _pressEnterPos;
     private Vector2 _pressEnterOrigin;
 
+    // Audio
+    private Song _titleGameSong;
+
+    private Texture2D _backgroundPattern;
+    private Rectangle _backgroundDestination;
+    private Vector2 _backgroundOffset;
+    private float _scrollSpeed = 50.0f;
+
     public override void Initialize()
     {
         base.Initialize();
@@ -39,13 +50,19 @@ public class TitleScene : Scene
         size = _font.MeasureString(PRESS_ENTER_TEXT);
         _pressEnterPos = new(640, 620);
         _pressEnterOrigin = size * 0.5f;
+
+        _backgroundOffset = Vector2.Zero;
+        _backgroundDestination = Core.GraphicsDevice.PresentationParameters.Bounds;
     }
 
     public override void LoadContent()
     {
         _font = Core.Content.Load<SpriteFont>("fonts/04B_30");
 
-        base.LoadContent();
+        _backgroundPattern = Content.Load<Texture2D>("images/title/bg-pattern");
+
+        _titleGameSong = Content.Load<Song>("audio/theme3");
+        Core.Audio.PlaySong(_titleGameSong);
     }
 
     public override void Update(GameTime gameTime)
@@ -54,11 +71,22 @@ public class TitleScene : Scene
         {
             Core.ChangeScene(new GameScene());
         }
+
+        float offset = _scrollSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+        _backgroundOffset.X -= offset;
+        _backgroundOffset.Y -= offset;
+
+        _backgroundOffset.X %= _backgroundPattern.Width;
+        _backgroundOffset.Y %= _backgroundPattern.Height;
     }
 
     public override void Draw(GameTime gameTime)
     {
         Core.GraphicsDevice.Clear(new Color(32, 40, 78, 255));
+
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointWrap);
+        Core.SpriteBatch.Draw(_backgroundPattern, _backgroundDestination, new Rectangle(_backgroundOffset.ToPoint(), _backgroundDestination.Size), Color.White * 0.5f);
+        Core.SpriteBatch.End();
 
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
 

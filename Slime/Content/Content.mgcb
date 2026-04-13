@@ -25,11 +25,33 @@
 /processorParam:Quality=Best
 /build:audio/collect.wav
 
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/collect2.wav
+
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/dash.wav
+
 #begin audio/theme.ogg
 /importer:OggImporter
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:audio/theme.ogg
+
+#begin audio/theme2.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:audio/theme2.ogg
+
+#begin audio/theme3.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:audio/theme3.ogg
 
 #begin entity.xml
 /copy:entity.xml
@@ -59,5 +81,17 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:images/main.png;
+
+#begin images/main.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/title/bg-pattern.png;
 
 /copy:tilemap.xml

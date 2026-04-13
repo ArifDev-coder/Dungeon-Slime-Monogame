@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Graphics;
 using Slime;
 using Slime.Input;
 using Slime.Graphics;
@@ -18,9 +17,6 @@ namespace Slime;
 /// </summary>
 public class Game1 : Core
 {
-    // Audio
-    private Song _themeSong;
-
 
     /// <summary>
     /// Konstruktor untuk membuat game "Dungeon Slime" dengan ukuran 1280x720 pixel.
@@ -39,7 +35,6 @@ public class Game1 : Core
     {
         base.Initialize();
 
-        Audio.PlaySong(_themeSong);
 
         ChangeScene(new TitleScene());
     }
@@ -50,6 +45,5 @@ public class Game1 : Core
     /// </summary>
     protected override void LoadContent()
     {
-        _themeSong = Content.Load<Song>("audio/theme");
     }
 }

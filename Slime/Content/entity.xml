@@ -45,7 +45,7 @@
 
     <!-- <=== Bat Basic ===> -->
     <!-- Basic -->
-    <Animation name="bat_basic" delay="80">
+    <Animation name="bat_basic" delay="70">
       <Frame region="bat-1"/>
       <Frame region="bat-2"/>
       <Frame region="bat-3"/>
@@ -77,7 +77,7 @@
       <Frame region="slime-10"/>
     </Animation>
     <!-- Move -->
-    <Animation name="slime_move" delay="100">
+    <Animation name="slime_move" delay="50">
       <Frame region="slime-11"/>
       <Frame region="slime-12"/>
       <Frame region="slime-13"/>
