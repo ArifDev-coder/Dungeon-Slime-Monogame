@@ -23,8 +23,6 @@ public class GameScene : Scene
     private SoundEffect _collectSoundEffect;
     private SoundEffect _dashSoundEffect;
     private Song _themeGameSceneSong;
-    private SoundEffect _dashSoundEffect;
-    private Song _themeGameSceneSong;
 
     // Sprite
     private AnimatedSprite _slime;
@@ -37,8 +35,6 @@ public class GameScene : Scene
     private Vector2 _scoreTextOrigin;
     private Vector2 _cooldownTextPosition;
     private Vector2 _cooldownTextOrigin;
-    private Vector2 _cooldownTextPosition;
-    private Vector2 _cooldownTextOrigin;
 
     // Sprite Position
     private Vector2 _slimePosition;
@@ -46,19 +42,14 @@ public class GameScene : Scene
     private Vector2 _batVelocity;
     private Tilemap _tilemap;
     private Rectangle _roomBounds;
-    private float lastDashTime = -DASH_COOLDWON;
-    private float lastDashTime = -DASH_COOLDWON;
+    private float lastDashTime = -DASH_COOLDOWN;
 
     // Config
     private const float SLIME_MOVEMENT = 7.0f;
     private const float BAT_MOVEMENT = 9.0f;
-    private const float DASH_COOLDWON = 1.0f; // in seconds
+    private const float DASH_COOLDOWN = 1.0f; // in seconds
     private bool isCooldown = false;
 
-    private const float SLIME_MOVEMENT = 7.0f;
-    private const float BAT_MOVEMENT = 9.0f;
-    private const float DASH_COOLDWON = 1.0f; // in seconds
-    private bool isCooldown = false;
 
     // Input Buffer
     private Queue<Vector2> _inputBuffer;
@@ -96,9 +87,6 @@ public class GameScene : Scene
         _cooldownTextPosition = new Vector2(_roomBounds.Right, _tilemap.TileHeight * 0.5f);
 
         float scoreTextYOrigin = _font.MeasureString("Score").Y * 0.5f;
-        float cooldownTextYOrigin = _font.MeasureString("Dash Cooldown").Y * 0.5f;
-        float cooldownTextXOrigin = _font.MeasureString("Dash Cooldown").X;
-
         float cooldownTextYOrigin = _font.MeasureString("Dash Cooldown").Y * 0.5f;
         float cooldownTextXOrigin = _font.MeasureString("Dash Cooldown").X;
 
@@ -342,7 +330,7 @@ public class GameScene : Scene
 
         float currentDashTime = (float)gameTime.TotalGameTime.TotalSeconds;
 
-        if (currentDashTime - lastDashTime >= DASH_COOLDWON)
+        if (currentDashTime - lastDashTime >= DASH_COOLDOWN)
         {
             if (Keyboard.WasKeyJustPressed(Keys.Space) && direction != Vector2.Zero)
             {

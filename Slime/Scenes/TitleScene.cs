@@ -3,11 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Media;
 using Slime;
 using Slime.Scenes;
-using Slime.Audio;
 using Slime.Audio;
 
 namespace Slime.Scenes;
@@ -27,14 +24,6 @@ public class TitleScene : Scene
     private Vector2 _slimeTextOrigin;
     private Vector2 _pressEnterPos;
     private Vector2 _pressEnterOrigin;
-
-    // Audio
-    private Song _titleGameSong;
-
-    private Texture2D _backgroundPattern;
-    private Rectangle _backgroundDestination;
-    private Vector2 _backgroundOffset;
-    private float _scrollSpeed = 50.0f;
 
     // Audio
     private Song _titleGameSong;
