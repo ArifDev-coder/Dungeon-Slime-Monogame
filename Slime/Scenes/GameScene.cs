@@ -41,13 +41,14 @@ public class GameScene : Scene
     private Vector2 _batVelocity;
     private Tilemap _tilemap;
     private Rectangle _roomBounds;
-    private float lastDashTime = -DASH_COOLDWON;
+    private float lastDashTime = -DASH_COOLDOWN;
 
     // Config
     private const float SLIME_MOVEMENT = 7.0f;
     private const float BAT_MOVEMENT = 9.0f;
-    private const float DASH_COOLDWON = 1.0f; // in seconds
+    private const float DASH_COOLDOWN = 1.0f; // in seconds
     private bool isCooldown = false;
+
 
     // Input Buffer
     private Queue<Vector2> _inputBuffer;
@@ -60,6 +61,8 @@ public class GameScene : Scene
         Core.ExitOnEscape = false;
 
         Rectangle screenBounds = Core.GraphicsDevice.PresentationParameters.Bounds;
+
+        Core.Audio.PlaySong(_themeGameSceneSong);
 
         _tilemap.Scale = new Vector2(5.0f, 5.0f);
 
@@ -88,6 +91,7 @@ public class GameScene : Scene
 
         _scoreTextOrigin = new Vector2(0, scoreTextYOrigin);
         _cooldownTextOrigin = new Vector2(cooldownTextXOrigin, cooldownTextYOrigin);
+        _cooldownTextOrigin = new Vector2(cooldownTextXOrigin, cooldownTextYOrigin);
 
         AssignRandomBatVelocity();
     }
@@ -101,7 +105,6 @@ public class GameScene : Scene
 
         // Audio
         _themeGameSceneSong = Content.Load<Song>("audio/theme2");
-        Core.Audio.PlaySong(_themeGameSceneSong);
 
         // Fonts
         _font = Content.Load<SpriteFont>("fonts/04B_30");
@@ -324,7 +327,7 @@ public class GameScene : Scene
 
         float currentDashTime = (float)gameTime.TotalGameTime.TotalSeconds;
 
-        if (currentDashTime - lastDashTime >= DASH_COOLDWON)
+        if (currentDashTime - lastDashTime >= DASH_COOLDOWN)
         {
             if (Keyboard.WasKeyJustPressed(Keys.Space) && direction != Vector2.Zero)
             {

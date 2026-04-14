@@ -53,16 +53,18 @@ public class TitleScene : Scene
 
         _backgroundOffset = Vector2.Zero;
         _backgroundDestination = Core.GraphicsDevice.PresentationParameters.Bounds;
+        Core.Audio.PlaySong(_titleGameSong);
     }
 
     public override void LoadContent()
     {
+        base.LoadContent();
+
         _font = Core.Content.Load<SpriteFont>("fonts/04B_30");
 
         _backgroundPattern = Content.Load<Texture2D>("images/title/bg-pattern");
-
         _titleGameSong = Content.Load<Song>("audio/theme3");
-        Core.Audio.PlaySong(_titleGameSong);
+
     }
 
     public override void Update(GameTime gameTime)
@@ -83,6 +85,10 @@ public class TitleScene : Scene
     public override void Draw(GameTime gameTime)
     {
         Core.GraphicsDevice.Clear(new Color(32, 40, 78, 255));
+
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointWrap);
+        Core.SpriteBatch.Draw(_backgroundPattern, _backgroundDestination, new Rectangle(_backgroundOffset.ToPoint(), _backgroundDestination.Size), Color.White * 0.5f);
+        Core.SpriteBatch.End();
 
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointWrap);
         Core.SpriteBatch.Draw(_backgroundPattern, _backgroundDestination, new Rectangle(_backgroundOffset.ToPoint(), _backgroundDestination.Size), Color.White * 0.5f);
