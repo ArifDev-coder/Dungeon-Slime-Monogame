@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Media;
 using Slime;
 using Slime.Graphics;
 using Slime.Input;
@@ -22,6 +23,8 @@ public class GameScene : Scene
     private SoundEffect _collectSoundEffect;
     private SoundEffect _dashSoundEffect;
     private Song _themeGameSceneSong;
+    private SoundEffect _dashSoundEffect;
+    private Song _themeGameSceneSong;
 
     // Sprite
     private AnimatedSprite _slime;
@@ -34,6 +37,8 @@ public class GameScene : Scene
     private Vector2 _scoreTextOrigin;
     private Vector2 _cooldownTextPosition;
     private Vector2 _cooldownTextOrigin;
+    private Vector2 _cooldownTextPosition;
+    private Vector2 _cooldownTextOrigin;
 
     // Sprite Position
     private Vector2 _slimePosition;
@@ -42,8 +47,14 @@ public class GameScene : Scene
     private Tilemap _tilemap;
     private Rectangle _roomBounds;
     private float lastDashTime = -DASH_COOLDWON;
+    private float lastDashTime = -DASH_COOLDWON;
 
     // Config
+    private const float SLIME_MOVEMENT = 7.0f;
+    private const float BAT_MOVEMENT = 9.0f;
+    private const float DASH_COOLDWON = 1.0f; // in seconds
+    private bool isCooldown = false;
+
     private const float SLIME_MOVEMENT = 7.0f;
     private const float BAT_MOVEMENT = 9.0f;
     private const float DASH_COOLDWON = 1.0f; // in seconds
@@ -88,7 +99,11 @@ public class GameScene : Scene
         float cooldownTextYOrigin = _font.MeasureString("Dash Cooldown").Y * 0.5f;
         float cooldownTextXOrigin = _font.MeasureString("Dash Cooldown").X;
 
+        float cooldownTextYOrigin = _font.MeasureString("Dash Cooldown").Y * 0.5f;
+        float cooldownTextXOrigin = _font.MeasureString("Dash Cooldown").X;
+
         _scoreTextOrigin = new Vector2(0, scoreTextYOrigin);
+        _cooldownTextOrigin = new Vector2(cooldownTextXOrigin, cooldownTextYOrigin);
         _cooldownTextOrigin = new Vector2(cooldownTextXOrigin, cooldownTextYOrigin);
 
         AssignRandomBatVelocity();
@@ -122,6 +137,8 @@ public class GameScene : Scene
 
         // Audio
         _baunceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
+        _collectSoundEffect = Content.Load<SoundEffect>("audio/collect2");
+        _dashSoundEffect = Content.Load<SoundEffect>("audio/dash");
         _collectSoundEffect = Content.Load<SoundEffect>("audio/collect2");
         _dashSoundEffect = Content.Load<SoundEffect>("audio/dash");
     }
