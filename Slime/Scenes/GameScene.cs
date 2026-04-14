@@ -126,8 +126,6 @@ public class GameScene : Scene
         _baunceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
         _collectSoundEffect = Content.Load<SoundEffect>("audio/collect2");
         _dashSoundEffect = Content.Load<SoundEffect>("audio/dash");
-        _collectSoundEffect = Content.Load<SoundEffect>("audio/collect2");
-        _dashSoundEffect = Content.Load<SoundEffect>("audio/dash");
     }
 
     /// <summary>
