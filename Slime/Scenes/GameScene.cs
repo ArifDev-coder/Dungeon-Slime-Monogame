@@ -61,6 +61,8 @@ public class GameScene : Scene
 
         Rectangle screenBounds = Core.GraphicsDevice.PresentationParameters.Bounds;
 
+        Core.Audio.PlaySong(_themeGameSceneSong);
+
         _tilemap.Scale = new Vector2(5.0f, 5.0f);
 
         _roomBounds = new Rectangle(
@@ -101,7 +103,6 @@ public class GameScene : Scene
 
         // Audio
         _themeGameSceneSong = Content.Load<Song>("audio/theme2");
-        Core.Audio.PlaySong(_themeGameSceneSong);
 
         // Fonts
         _font = Content.Load<SpriteFont>("fonts/04B_30");
