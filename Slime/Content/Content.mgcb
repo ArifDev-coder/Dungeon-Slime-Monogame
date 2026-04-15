@@ -25,15 +25,23 @@
 /processorParam:Quality=Best
 /build:audio/collect.wav
 
+#begin audio/collect2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:audio/collect2.wav
 
+#begin audio/dash.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:audio/dash.wav
+
+#begin audio/ui.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/ui.wav
 
 #begin audio/theme.ogg
 /importer:OggImporter

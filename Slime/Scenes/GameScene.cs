@@ -9,6 +9,12 @@ using Slime;
 using Slime.Graphics;
 using Slime.Input;
 using Slime.Scenes;
+using Gum.DataTypes;
+using Gum.Wireframe;
+using MonoGameGum;
+using Gum.Forms.Controls;
+using MonoGameGum.GueDeriving;
+using System.Reflection.Metadata;
 
 namespace Slime.Scenes;
 
@@ -49,10 +55,21 @@ public class GameScene : Scene
     private const float DASH_COOLDOWN = 1.0f; // in seconds
     private bool isCooldown = false;
 
-
     // Input Buffer
     private Queue<Vector2> _inputBuffer;
     private const int MAX_BUFFER_SIZE = 2;
+
+    // UI
+    private Panel _pausePanel;
+    private Button _resumeButton;
+    private SoundEffect _uiSoundEffect;
+
+    private void InitializeUI()
+    {
+        GumService.Default.Root.Children.Clear();
+
+        CreatePausepanel();
+    }
 
     public override void Initialize()
     {
@@ -94,6 +111,8 @@ public class GameScene : Scene
         _cooldownTextOrigin = new Vector2(cooldownTextXOrigin, cooldownTextYOrigin);
 
         AssignRandomBatVelocity();
+
+        InitializeUI();
     }
 
     public override void LoadContent()
@@ -107,7 +126,7 @@ public class GameScene : Scene
         _themeGameSceneSong = Content.Load<Song>("audio/theme2");
 
         // Fonts
-        _font = Content.Load<SpriteFont>("fonts/04B_30");
+        _font = Core.Content.Load<SpriteFont>("fonts/04B_30");
 
         // Sprite
         // _slime0 = atlas.GetRegion("slime0");
@@ -126,6 +145,69 @@ public class GameScene : Scene
         _baunceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
         _collectSoundEffect = Content.Load<SoundEffect>("audio/collect2");
         _dashSoundEffect = Content.Load<SoundEffect>("audio/dash");
+        _uiSoundEffect = Core.Content.Load<SoundEffect>("audio/ui");
+    }
+
+    private void PauseGame()
+    {
+        _pausePanel.IsVisible = true;
+        _resumeButton.IsFocused = true;
+        Core.Audio.PauseAudio();
+    }
+
+    private void CreatePausepanel()
+    {
+        _pausePanel = new Panel();
+        _pausePanel.Anchor(Anchor.Center);
+        _pausePanel.WidthUnits = DimensionUnitType.Absolute;
+        _pausePanel.HeightUnits = DimensionUnitType.Absolute;
+        _pausePanel.Height = 70;
+        _pausePanel.Width = 264;
+        _pausePanel.IsVisible = false;
+        _pausePanel.AddToRoot();
+
+        var background = new ColoredRectangleRuntime();
+        background.Dock(Dock.Fill);
+        background.Color = Color.DarkBlue;
+        _pausePanel.AddChild(background);
+
+        var textInstance = new TextRuntime();
+        textInstance.Text = "PAUSED";
+        textInstance.X = 10f;
+        textInstance.Y = 10f;
+        _pausePanel.AddChild(textInstance);
+
+        _resumeButton = new Button();
+        _resumeButton.Text = "RESUME";
+        _resumeButton.Anchor(Anchor.BottomLeft);
+        _resumeButton.X = 9f;
+        _resumeButton.Y = -9f;
+        _resumeButton.Width = 80;
+        _resumeButton.Click += HandleResumeButtonClicked;
+        _pausePanel.AddChild(_resumeButton);
+
+        var quitButton = new Button();
+        quitButton.Text = "QUIT";
+        quitButton.Anchor(Anchor.BottomRight);
+        quitButton.X = -9f;
+        quitButton.Y = -9f;
+        quitButton.Width = 80;
+        quitButton.Click += HandleQuitButtonClicked;
+        _pausePanel.AddChild(quitButton);
+    }
+
+    private void HandleResumeButtonClicked(object sender, EventArgs e)
+    {
+        Core.Audio.ResumeAudio();
+        Core.Audio.PlaySoundEffect(_uiSoundEffect);
+
+        _pausePanel.IsVisible = false;
+    }
+
+    private void HandleQuitButtonClicked(object sender, EventArgs e)
+    {
+        Core.Audio.PlaySoundEffect(_uiSoundEffect);
+        Core.ChangeScene(new TitleScene());
     }
 
     /// <summary>
@@ -135,6 +217,20 @@ public class GameScene : Scene
     /// <param name="gameTime">Informasi tentang waktu permainan (delta time, total time)</param>
     public override void Update(GameTime gameTime)
     {
+        GumService.Default.Update(gameTime);
+
+        if (_pausePanel.IsVisible)
+        {
+            return;
+        }
+
+        if (Core.Input.Keyboard.WasKeyJustPressed(Keys.Escape))
+        {
+            // Core.ChangeScene(new TitleScene());
+            PauseGame();
+            return;
+        }
+
         CheckKeyboardInput(gameTime);
         // CheckKeyboardInputWithInputBufferTest();
         CheckGamePadInput();
@@ -144,6 +240,118 @@ public class GameScene : Scene
         _bat.Update(gameTime);
 
     }
+
+    /// <summary>
+    /// Dijalankan setiap frame untuk menggambar semua objek visual ke layar.
+    /// Menampilkan logo dan karakter slime pada posisi yang ditentukan.
+    /// </summary>
+    /// <param name="gameTime">Informasi tentang waktu permainan (delta time, total time)</param>
+    public override void Draw(GameTime gameTime)
+    {
+        Core.GraphicsDevice.Clear(Color.Black);
+
+        // Rectangle IconSourceRect = new(0, 0, 128, 128);
+        // Rectangle WordmarkSourceRect = new(150, 34, 458, 58);
+
+        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp); // sortMode: SpriteSortMode.BackToFront
+
+        // SpriteBatch.Draw(_logo_mg,                     // Texture
+        //     new Vector2(                            // Position
+        //         Window.ClientBounds.Width,
+        //         Window.ClientBounds.Height) * 0.5f,
+        //     IconSourceRect,                                   // SourceRectangle
+        //     Color.White * 0.9f,                     // Color
+        //     0.0f,                                   // Rotation (MathHelper.ToRadians(0))
+        //     new Vector2(
+        //         IconSourceRect.Width,
+        //         IconSourceRect.Height) * 0.5f,               // Origin
+        //     1.0f,                                   // Scale (bisa paka new Vector2(x, y))
+        //     SpriteEffects.None,                     // Effects (Flip horizonal or vertical) SpriteEffects.FlipVertically | SpriteEffects.FlipHorizontally
+        //     1.0f                                    // LayerDepth (seperti z-index di html)
+        // );
+
+        // SpriteBatch.Draw(_logo_mg,                     // Texture
+        //     new Vector2(                            // Position
+        //         Window.ClientBounds.Width,
+        //         Window.ClientBounds.Height) * 0.5f,
+        //     WordmarkSourceRect,                                   // SourceRectangle
+        //     Color.White * 0.9f,                     // Color
+        //     0.0f,                                   // Rotation (MathHelper.ToRadians(0))
+        //     new Vector2(
+        //         WordmarkSourceRect.Width,
+        //         WordmarkSourceRect.Height) * 0.5f,               // Origin
+        //     1.0f,                                   // Scale (bisa paka new Vector2(x, y))
+        //     SpriteEffects.None,                     // Effects (Flip horizonal or vertical) SpriteEffects.FlipVertically | SpriteEffects.FlipHorizontally
+        //     0.0f                                    // LayerDepth
+        // );
+
+        // _slime0.Draw(SpriteBatch, Vector2.Zero, Color.White, 0.0f, Vector2.One, 4.0f, SpriteEffects.None, 0.0f);
+        // _slime1.Draw(
+        //     SpriteBatch,
+        //     new Vector2(
+        //         500, 500
+        //     ),
+        //     Color.White,
+        //     0.0f,
+        //     Vector2.One,
+        //     4.0f,
+        //     SpriteEffects.None,
+        //     0.0f
+        // );
+
+        _tilemap.Draw(Core.SpriteBatch);
+
+        // Message Score
+        Core.SpriteBatch.DrawString(
+            _font,                      // Font
+            $"Score: {_score}",         // Text
+            _scoreTextPosition,         // Position
+            Color.White,                // Color
+            0.0f,                       // Rotation
+            _scoreTextOrigin,           // Origin
+            1.0f,                       // Scale
+            SpriteEffects.None,         // Effects
+            0.0f                        // LayerDepth   
+        );
+
+        _slime.Draw(Core.SpriteBatch, _slimePosition);
+        _bat.Draw(Core.SpriteBatch, _batPosition);
+
+        if (isCooldown)
+        {
+            Core.SpriteBatch.DrawString(
+            _font,                      // Font
+            "Dash Cooldown",         // Text
+            _cooldownTextPosition,         // Position
+            Color.White,                // Color
+            0.0f,                       // Rotation
+            _cooldownTextOrigin,           // Origin
+            1.0f,                       // Scale
+            SpriteEffects.None,         // Effects
+            0.0f                        // LayerDepth   
+        );
+        }
+
+        // SpriteBatch.Draw(_logo_se,
+        //     new Vector2(
+        //         Window.ClientBounds.Width,
+        //         10) * 0.5f,
+        //     null,
+        //     Color.White,
+        //     0.0f,
+        //     new Vector2(
+        //         _logo_se.Width,
+        //         0) * 0.5f,
+        //     0.4f,
+        //     SpriteEffects.None,
+        //     1.0f
+        // );
+
+        Core.SpriteBatch.End();
+
+        GumService.Default.Draw();
+    }
+
 
     private void EnemyAI()
     {
@@ -266,11 +474,6 @@ public class GameScene : Scene
         KeyboardInfo Keyboard = Core.Input.Keyboard;
 
         float speed = SLIME_MOVEMENT;
-
-        if (Keyboard.WasKeyJustPressed(Keys.Escape))
-        {
-            Core.ChangeScene(new TitleScene());
-        }
 
         if (Keyboard.IsKeyDown(Keys.W) || Keyboard.IsKeyDown(Keys.Up))
         {
@@ -434,114 +637,5 @@ public class GameScene : Scene
                 _slimePosition.X += speed;
             }
         }
-    }
-
-    /// <summary>
-    /// Dijalankan setiap frame untuk menggambar semua objek visual ke layar.
-    /// Menampilkan logo dan karakter slime pada posisi yang ditentukan.
-    /// </summary>
-    /// <param name="gameTime">Informasi tentang waktu permainan (delta time, total time)</param>
-    public override void Draw(GameTime gameTime)
-    {
-        Core.GraphicsDevice.Clear(Color.Black);
-
-        // Rectangle IconSourceRect = new(0, 0, 128, 128);
-        // Rectangle WordmarkSourceRect = new(150, 34, 458, 58);
-
-        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp); // sortMode: SpriteSortMode.BackToFront
-
-        // SpriteBatch.Draw(_logo_mg,                     // Texture
-        //     new Vector2(                            // Position
-        //         Window.ClientBounds.Width,
-        //         Window.ClientBounds.Height) * 0.5f,
-        //     IconSourceRect,                                   // SourceRectangle
-        //     Color.White * 0.9f,                     // Color
-        //     0.0f,                                   // Rotation (MathHelper.ToRadians(0))
-        //     new Vector2(
-        //         IconSourceRect.Width,
-        //         IconSourceRect.Height) * 0.5f,               // Origin
-        //     1.0f,                                   // Scale (bisa paka new Vector2(x, y))
-        //     SpriteEffects.None,                     // Effects (Flip horizonal or vertical) SpriteEffects.FlipVertically | SpriteEffects.FlipHorizontally
-        //     1.0f                                    // LayerDepth (seperti z-index di html)
-        // );
-
-        // SpriteBatch.Draw(_logo_mg,                     // Texture
-        //     new Vector2(                            // Position
-        //         Window.ClientBounds.Width,
-        //         Window.ClientBounds.Height) * 0.5f,
-        //     WordmarkSourceRect,                                   // SourceRectangle
-        //     Color.White * 0.9f,                     // Color
-        //     0.0f,                                   // Rotation (MathHelper.ToRadians(0))
-        //     new Vector2(
-        //         WordmarkSourceRect.Width,
-        //         WordmarkSourceRect.Height) * 0.5f,               // Origin
-        //     1.0f,                                   // Scale (bisa paka new Vector2(x, y))
-        //     SpriteEffects.None,                     // Effects (Flip horizonal or vertical) SpriteEffects.FlipVertically | SpriteEffects.FlipHorizontally
-        //     0.0f                                    // LayerDepth
-        // );
-
-        // _slime0.Draw(SpriteBatch, Vector2.Zero, Color.White, 0.0f, Vector2.One, 4.0f, SpriteEffects.None, 0.0f);
-        // _slime1.Draw(
-        //     SpriteBatch,
-        //     new Vector2(
-        //         500, 500
-        //     ),
-        //     Color.White,
-        //     0.0f,
-        //     Vector2.One,
-        //     4.0f,
-        //     SpriteEffects.None,
-        //     0.0f
-        // );
-
-        _tilemap.Draw(Core.SpriteBatch);
-
-        // Message Score
-        Core.SpriteBatch.DrawString(
-            _font,                      // Font
-            $"Score: {_score}",         // Text
-            _scoreTextPosition,         // Position
-            Color.White,                // Color
-            0.0f,                       // Rotation
-            _scoreTextOrigin,           // Origin
-            1.0f,                       // Scale
-            SpriteEffects.None,         // Effects
-            0.0f                        // LayerDepth   
-        );
-
-        _slime.Draw(Core.SpriteBatch, _slimePosition);
-        _bat.Draw(Core.SpriteBatch, _batPosition);
-
-        if (isCooldown)
-        {
-            Core.SpriteBatch.DrawString(
-            _font,                      // Font
-            "Dash Cooldown",         // Text
-            _cooldownTextPosition,         // Position
-            Color.White,                // Color
-            0.0f,                       // Rotation
-            _cooldownTextOrigin,           // Origin
-            1.0f,                       // Scale
-            SpriteEffects.None,         // Effects
-            0.0f                        // LayerDepth   
-        );
-        }
-
-        // SpriteBatch.Draw(_logo_se,
-        //     new Vector2(
-        //         Window.ClientBounds.Width,
-        //         10) * 0.5f,
-        //     null,
-        //     Color.White,
-        //     0.0f,
-        //     new Vector2(
-        //         _logo_se.Width,
-        //         0) * 0.5f,
-        //     0.4f,
-        //     SpriteEffects.None,
-        //     1.0f
-        // );
-
-        Core.SpriteBatch.End();
     }
 }
