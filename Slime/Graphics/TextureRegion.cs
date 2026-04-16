@@ -28,7 +28,7 @@ public class TextureRegion
 
     public float TopTextureCoordinate => SourceRectangle.Top / (float)Texture.Height;
 
-    public float BottonTextureCoordinate => SourceRectangle.Bottom / (float)Texture.Height;
+    public float BottomTextureCoordinate => SourceRectangle.Bottom / (float)Texture.Height;
 
     public float LeftTextureCoodinate => SourceRectangle.Left / (float)Texture.Width;
 
