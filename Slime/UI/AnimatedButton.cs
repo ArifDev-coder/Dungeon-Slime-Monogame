@@ -80,5 +80,48 @@ internal class AnimatedButton : Button
             unfocusedAnimation,
             focusedAnimation
         };
+
+        buttonVisual.ButtonCategory.ResetAllStates();
+
+        StateSave enableState = buttonVisual.States.Enabled;
+        enableState.Apply = () =>
+        {
+            background.CurrentChainName = unfocusedAnimation.Name;
+        };
+
+        StateSave focusedState = buttonVisual.States.Focused;
+        focusedState.Apply = () =>
+        {
+            background.CurrentChainName = focusedAnimation.Name;
+            background.Animate = true;
+        };
+
+        StateSave highlightedFocused = buttonVisual.States.Highlighted;
+        highlightedFocused.Apply = focusedState.Apply;
+
+        StateSave highlighted = buttonVisual.States.Highlighted;
+        highlighted.Apply = enableState.Apply;
+
+        KeyDown += HandleKeyDown;
+
+        buttonVisual.RollOn += HandleRollOn;
+    }
+
+    private void HandleKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Keys.Left)
+        {
+            HandleTab(TabDirection.Up, loop: true);
+        }
+
+        if (e.Key == Keys.Right)
+        {
+            HandleTab(TabDirection.Down, loop: true);
+        }
+    }
+
+    private void HandleRollOn(object sender, EventArgs e)
+    {
+        IsFocused = true;
     }
 }
