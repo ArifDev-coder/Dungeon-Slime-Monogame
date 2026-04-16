@@ -48,7 +48,7 @@ internal class AnimatedButton : Button
         AnimationFrame unfocusedFrame = new AnimationFrame
         {
             TopCoordinate = unfocusedTextureRegion.TopTextureCoordinate,
-            BottomCoordinate = unfocusedTextureRegion.BottonTextureCoordinate,
+            BottomCoordinate = unfocusedTextureRegion.BottomTextureCoordinate,
             LeftCoordinate = unfocusedTextureRegion.LeftTextureCoodinate,
             RightCoordinate = unfocusedTextureRegion.RightTextureCoordinate,
             FrameLength = .3f,
