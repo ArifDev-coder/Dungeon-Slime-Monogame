@@ -64,6 +64,9 @@
 #begin entity.xml
 /copy:entity.xml
 
+#bagin ui.xml
+/copy:ui.xml
+
 #begin fonts/04b_30.fnt
 /copy:fonts/04b_30.fnt
 

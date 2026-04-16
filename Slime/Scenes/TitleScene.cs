@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Media;
 using Slime;
 using Slime.Scenes;
 using Slime.Audio;
+using Slime.Graphics;
+using Slime.UI;
 using MonoGameGum;
 using MonoGameGum.GueDeriving;
 using Gum.Forms.Controls;
@@ -41,8 +43,12 @@ public class TitleScene : Scene
     private SoundEffect _uiSoundEffect;
     private Panel _titleScreenButtonsPanel;
     private Panel _optionsPanel;
-    private Button _optionsButton;
-    private Button _optionsBackButton;
+    // private Button _optionsButton;
+    // private Button _optionsBackButton;
+    private AnimatedButton _optionsButton;
+    private AnimatedButton _optionsBackButton;
+    private TextureAtlas _UI;
+
 
     private void CreateTitlePanel()
     {
@@ -50,7 +56,7 @@ public class TitleScene : Scene
         _titleScreenButtonsPanel.Dock(Gum.Wireframe.Dock.Fill);
         _titleScreenButtonsPanel.AddToRoot();
 
-        var startButton = new Button();
+        AnimatedButton startButton = new AnimatedButton(_UI);
         startButton.Anchor(Gum.Wireframe.Anchor.BottomLeft);
         startButton.X = 50;
         startButton.Y = -12;
@@ -59,7 +65,7 @@ public class TitleScene : Scene
         startButton.Click += HandleStartClicked;
         _titleScreenButtonsPanel.AddChild(startButton);
 
-        _optionsButton = new Button();
+        _optionsButton = new AnimatedButton(_UI);
         _optionsButton.Anchor(Gum.Wireframe.Anchor.BottomRight);
         _optionsButton.X = -50;
         _optionsButton.Y = -12;
@@ -94,19 +100,18 @@ public class TitleScene : Scene
         _optionsPanel.IsVisible = false;
         _optionsPanel.AddToRoot();
 
-        var optionsText = new TextRuntime();
+        TextRuntime optionsText = new TextRuntime();
         optionsText.X = 10;
         optionsText.Y = 10;
         optionsText.Text = "OPTIONS";
+        optionsText.UseCustomFont = true;
+        optionsText.FontScale = 0.5f;
+        optionsText.CustomFontFile = @"fonts/04b_30.fnt";
         _optionsPanel.AddChild(optionsText);
 
-        var musicLabel = new Label();
-        musicLabel.Text = "Music";
-        musicLabel.X = 35;
-        musicLabel.Y = 35;
-        _optionsPanel.AddChild(musicLabel);
-
-        var musicSlider = new Slider();
+        OptionsSlider musicSlider = new OptionsSlider(_UI);
+        musicSlider.Name = "MusicSlider";
+        musicSlider.Text = "MUSIC";
         musicSlider.Anchor(Gum.Wireframe.Anchor.Top);
         musicSlider.Y = 30f;
         musicSlider.Minimum = 0;
@@ -118,13 +123,9 @@ public class TitleScene : Scene
         musicSlider.ValueChangeCompleted += HandleMusicsSliderValueChangeCompleted;
         _optionsPanel.AddChild(musicSlider);
 
-        var sfxLabel = new Label();
-        sfxLabel.Text = "SFX";
-        sfxLabel.X = 20;
-        sfxLabel.Y = 80;
-        _optionsPanel.AddChild(sfxLabel);
-
-        var sfxSlider = new Slider();
+        OptionsSlider sfxSlider = new OptionsSlider(_UI);
+        sfxSlider.Name = "SfxSlider";
+        sfxSlider.Text = "SFX";
         sfxSlider.Anchor(Gum.Wireframe.Anchor.Top);
         sfxSlider.Y = 93;
         sfxSlider.Minimum = 0;
@@ -136,7 +137,7 @@ public class TitleScene : Scene
         sfxSlider.ValueChangeCompleted += HandleSfxSliderChangeCompleted;
         _optionsPanel.AddChild(sfxSlider);
 
-        _optionsBackButton = new Button();
+        _optionsBackButton = new AnimatedButton(_UI);
         _optionsBackButton.Text = "BACK";
         _optionsBackButton.Anchor(Gum.Wireframe.Anchor.BottomRight);
         _optionsBackButton.X = -28f;
@@ -222,6 +223,7 @@ public class TitleScene : Scene
         _titleGameSong = Content.Load<Song>("audio/theme3");
 
         _uiSoundEffect = Core.Content.Load<SoundEffect>("audio/ui");
+        _UI = TextureAtlas.FromFile(Core.Content, "ui.xml");
     }
 
     public override void Update(GameTime gameTime)
