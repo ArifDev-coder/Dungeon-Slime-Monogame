@@ -25,11 +25,13 @@
 /processorParam:Quality=Best
 /build:audio/collect.wav
 
+#begin audio/collect2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:audio/collect2.wav
 
+#begin audio/dash.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
@@ -53,8 +55,17 @@
 /processorParam:Quality=Best
 /build:audio/theme3.ogg
 
+#begin audio/ui.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/ui.wav
+
 #begin entity.xml
 /copy:entity.xml
+
+#begin fonts/04b_30.fnt
+/copy:fonts/04b_30.fnt
 
 #begin fonts/04B_30.spritefont
 /importer:FontDescriptionImporter
@@ -70,7 +81,7 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/Roboto.spritefont
 
-#begin images/main.png
+#begin images/atlas.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -80,9 +91,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/main.png;
+/build:images/atlas.png
 
-#begin images/main.png
+#begin images/UI/font.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -92,6 +103,23 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/title/bg-pattern.png;
+/build:images/UI/font.png
 
+#begin images/title/bg-pattern.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/title/bg-pattern.png
+
+#begin tilemap.xml
 /copy:tilemap.xml
+
+#begin ui.xml
+/copy:ui.xml
+

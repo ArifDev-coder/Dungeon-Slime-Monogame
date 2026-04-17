@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Tilemap>
-  <Tileset region="368 0 144 48" tileWidth="16" tileHeight="16">images/main</Tileset>
+  <Tileset region="368 0 144 48" tileWidth="16" tileHeight="16">images/atlas</Tileset>
     <Tiles>
     01 07 16 07 07 07 16 07 07 16 07 07 07 16 07 02
     00 18 18 18 18 18 18 18 18 18 18 18 18 18 18 09

@@ -8,7 +8,7 @@ public class TextureRegion
     /// <summary>
     /// Menyimpan tekstur gambar (gambar 2D) yang akan digambar di layar.
     /// </summary>
-    public Texture2D Texture2D { get; set; }
+    public Texture2D Texture { get; set; }
 
     /// <summary>
     /// Menyimpan area atau bagian dari tekstur yang ingin ditampilkan.
@@ -26,6 +26,14 @@ public class TextureRegion
     /// </summary>
     public int Height => SourceRectangle.Height;
 
+    public float TopTextureCoordinate => SourceRectangle.Top / (float)Texture.Height;
+
+    public float BottomTextureCoordinate => SourceRectangle.Bottom / (float)Texture.Height;
+
+    public float LeftTextureCoodinate => SourceRectangle.Left / (float)Texture.Width;
+
+    public float RightTextureCoordinate => SourceRectangle.Right / (float)Texture.Width;
+
     /// <summary>
     /// Konstruktor kosong. Gunakan ini jika ingin membuat TextureRegion tanpa data awal.
     /// </summary>
@@ -41,7 +49,7 @@ public class TextureRegion
     /// <param name="height">Tinggi area yang ingin ditampilkan</param>
     public TextureRegion(Texture2D texture, int x, int y, int width, int height)
     {
-        Texture2D = texture;
+        Texture = texture;
         SourceRectangle = new Rectangle(x, y, width, height);
     }
 
@@ -89,7 +97,7 @@ public class TextureRegion
     public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
     {
         spriteBatch.Draw(
-            Texture2D,
+            Texture,
             position,
             SourceRectangle,
             color,
