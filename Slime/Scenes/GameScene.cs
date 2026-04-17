@@ -1,20 +1,19 @@
 using System;
 using System.Collections.Generic;
+using Gum.DataTypes;
+using Gum.Forms.Controls;
+using Gum.Managers;
+using Gum.Wireframe;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using Slime;
+using MonoGameGum;
+using MonoGameGum.GueDeriving;
 using Slime.Graphics;
 using Slime.Input;
-using Slime.Scenes;
-using Gum.DataTypes;
-using Gum.Wireframe;
-using MonoGameGum;
-using Gum.Forms.Controls;
-using MonoGameGum.GueDeriving;
-using System.Reflection.Metadata;
+using Slime.UI;
 
 namespace Slime.Scenes;
 
@@ -61,8 +60,10 @@ public class GameScene : Scene
 
     // UI
     private Panel _pausePanel;
-    private Button _resumeButton;
     private SoundEffect _uiSoundEffect;
+    private AnimatedButton _resumeButton;
+
+    private TextureAtlas _UI;
 
     private void InitializeUI()
     {
@@ -94,7 +95,10 @@ public class GameScene : Scene
         int centerColumn = _tilemap.Columns / 2;
 
         // Init Slime Position at the center tile of the tile map.
-        _slimePosition = new Vector2(centerColumn * _tilemap.TileWidth, centerRow * _tilemap.TileHeight);
+        _slimePosition = new Vector2(
+            centerColumn * _tilemap.TileWidth,
+            centerRow * _tilemap.TileHeight
+        );
 
         // Init Bat Position at the center tile of the tile map.
         _batPosition = new Vector2(_roomBounds.Left, _roomBounds.Top);
@@ -121,6 +125,7 @@ public class GameScene : Scene
 
         // Texture Atlas
         _entityAtlas = TextureAtlas.FromFile(Core.Content, "entity.xml");
+        _UI = TextureAtlas.FromFile(Core.Content, "ui.xml");
 
         // Audio
         _themeGameSceneSong = Content.Load<Song>("audio/theme2");
@@ -166,18 +171,28 @@ public class GameScene : Scene
         _pausePanel.IsVisible = false;
         _pausePanel.AddToRoot();
 
-        var background = new ColoredRectangleRuntime();
+        TextureRegion backgroundRegion = _UI.GetRegion("panel-background");
+
+        NineSliceRuntime background = new NineSliceRuntime();
         background.Dock(Dock.Fill);
-        background.Color = Color.DarkBlue;
+        background.Texture = backgroundRegion.Texture;
+        background.TextureAddress = TextureAddress.Custom;
+        background.TextureHeight = backgroundRegion.Height;
+        background.TextureLeft = backgroundRegion.SourceRectangle.Left;
+        background.TextureTop = backgroundRegion.SourceRectangle.Top;
+        background.TextureWidth = backgroundRegion.Width;
         _pausePanel.AddChild(background);
 
         var textInstance = new TextRuntime();
         textInstance.Text = "PAUSED";
+        textInstance.CustomFontFile = @"fonts/04b_30.fnt";
+        textInstance.UseCustomFont = true;
+        textInstance.FontScale = 0.5f;
         textInstance.X = 10f;
         textInstance.Y = 10f;
         _pausePanel.AddChild(textInstance);
 
-        _resumeButton = new Button();
+        _resumeButton = new AnimatedButton(_UI);
         _resumeButton.Text = "RESUME";
         _resumeButton.Anchor(Anchor.BottomLeft);
         _resumeButton.X = 9f;
@@ -186,7 +201,7 @@ public class GameScene : Scene
         _resumeButton.Click += HandleResumeButtonClicked;
         _pausePanel.AddChild(_resumeButton);
 
-        var quitButton = new Button();
+        AnimatedButton quitButton = new AnimatedButton(_UI);
         quitButton.Text = "QUIT";
         quitButton.Anchor(Anchor.BottomRight);
         quitButton.X = -9f;
@@ -238,7 +253,6 @@ public class GameScene : Scene
 
         _slime.Update(gameTime);
         _bat.Update(gameTime);
-
     }
 
     /// <summary>
@@ -303,15 +317,15 @@ public class GameScene : Scene
 
         // Message Score
         Core.SpriteBatch.DrawString(
-            _font,                      // Font
-            $"Score: {_score}",         // Text
-            _scoreTextPosition,         // Position
-            Color.White,                // Color
-            0.0f,                       // Rotation
-            _scoreTextOrigin,           // Origin
-            1.0f,                       // Scale
-            SpriteEffects.None,         // Effects
-            0.0f                        // LayerDepth   
+            _font, // Font
+            $"Score: {_score}", // Text
+            _scoreTextPosition, // Position
+            Color.White, // Color
+            0.0f, // Rotation
+            _scoreTextOrigin, // Origin
+            1.0f, // Scale
+            SpriteEffects.None, // Effects
+            0.0f // LayerDepth
         );
 
         _slime.Draw(Core.SpriteBatch, _slimePosition);
@@ -320,16 +334,16 @@ public class GameScene : Scene
         if (isCooldown)
         {
             Core.SpriteBatch.DrawString(
-            _font,                      // Font
-            "Dash Cooldown",         // Text
-            _cooldownTextPosition,         // Position
-            Color.White,                // Color
-            0.0f,                       // Rotation
-            _cooldownTextOrigin,           // Origin
-            1.0f,                       // Scale
-            SpriteEffects.None,         // Effects
-            0.0f                        // LayerDepth   
-        );
+                _font, // Font
+                "Dash Cooldown", // Text
+                _cooldownTextPosition, // Position
+                Color.White, // Color
+                0.0f, // Rotation
+                _cooldownTextOrigin, // Origin
+                1.0f, // Scale
+                SpriteEffects.None, // Effects
+                0.0f // LayerDepth
+            );
         }
 
         // SpriteBatch.Draw(_logo_se,
@@ -351,7 +365,6 @@ public class GameScene : Scene
 
         GumService.Default.Draw();
     }
-
 
     private void EnemyAI()
     {
@@ -498,7 +511,6 @@ public class GameScene : Scene
 
             // if (direction.X < 0) _slime.Effects = SpriteEffects.FlipHorizontally;
             // else if (direction.X > 0) _slime.Effects = SpriteEffects.None;
-
         }
         else
         {
@@ -526,7 +538,6 @@ public class GameScene : Scene
         {
             direction.Normalize();
         }
-
 
         float currentDashTime = (float)gameTime.TotalGameTime.TotalSeconds;
 

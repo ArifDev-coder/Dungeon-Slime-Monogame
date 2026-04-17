@@ -84,7 +84,7 @@
 /processorParam:TextureFormat=Compressed
 /build:fonts/Roboto.spritefont
 
-#begin images/main.png
+#begin images/atlas.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -94,7 +94,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/main.png
+/build:images/atlas.png
 
 #begin images/title/bg-pattern.png
 /importer:TextureImporter
