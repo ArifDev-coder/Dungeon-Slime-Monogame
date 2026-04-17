@@ -1,17 +1,17 @@
 using System;
+using Gum.Forms.Controls;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
-using Slime;
-using Slime.Scenes;
-using Slime.Audio;
-using Slime.Graphics;
-using Slime.UI;
 using MonoGameGum;
 using MonoGameGum.GueDeriving;
-using Gum.Forms.Controls;
+using Slime;
+using Slime.Audio;
+using Slime.Graphics;
+using Slime.Scenes;
+using Slime.UI;
 
 namespace Slime.Scenes;
 
@@ -43,12 +43,12 @@ public class TitleScene : Scene
     private SoundEffect _uiSoundEffect;
     private Panel _titleScreenButtonsPanel;
     private Panel _optionsPanel;
+
     // private Button _optionsButton;
     // private Button _optionsBackButton;
     private AnimatedButton _optionsButton;
     private AnimatedButton _optionsBackButton;
     private TextureAtlas _UI;
-
 
     private void CreateTitlePanel()
     {
@@ -60,7 +60,7 @@ public class TitleScene : Scene
         startButton.Anchor(Gum.Wireframe.Anchor.BottomLeft);
         startButton.X = 50;
         startButton.Y = -12;
-        startButton.Width = 70;
+        startButton.Width = 50;
         startButton.Text = "Start";
         startButton.Click += HandleStartClicked;
         _titleScreenButtonsPanel.AddChild(startButton);
@@ -69,7 +69,7 @@ public class TitleScene : Scene
         _optionsButton.Anchor(Gum.Wireframe.Anchor.BottomRight);
         _optionsButton.X = -50;
         _optionsButton.Y = -12;
-        _optionsButton.Width = 70;
+        _optionsButton.Width = 50;
         _optionsButton.Text = "Options";
         _optionsButton.Click += HandleOptionsClicked;
         _titleScreenButtonsPanel.AddChild(_optionsButton);
@@ -248,7 +248,12 @@ public class TitleScene : Scene
         Core.GraphicsDevice.Clear(new Color(32, 40, 78, 255));
 
         Core.SpriteBatch.Begin(samplerState: SamplerState.PointWrap);
-        Core.SpriteBatch.Draw(_backgroundPattern, _backgroundDestination, new Rectangle(_backgroundOffset.ToPoint(), _backgroundDestination.Size), Color.White * 0.5f);
+        Core.SpriteBatch.Draw(
+            _backgroundPattern,
+            _backgroundDestination,
+            new Rectangle(_backgroundOffset.ToPoint(), _backgroundDestination.Size),
+            Color.White * 0.5f
+        );
         Core.SpriteBatch.End();
 
         if (_titleScreenButtonsPanel.IsVisible)
@@ -257,13 +262,53 @@ public class TitleScene : Scene
 
             Color dropShadowColor = Color.Black * 0.5f;
 
-            Core.SpriteBatch.DrawString(_font, DUNGEON_TEXT, _dungeonTextPos + new Vector2(10, 10), dropShadowColor, 0.0f, _dungeonTextOrigin, titleMultiplyFontSize, SpriteEffects.None, 1.0f);
+            Core.SpriteBatch.DrawString(
+                _font,
+                DUNGEON_TEXT,
+                _dungeonTextPos + new Vector2(10, 10),
+                dropShadowColor,
+                0.0f,
+                _dungeonTextOrigin,
+                titleMultiplyFontSize,
+                SpriteEffects.None,
+                1.0f
+            );
 
-            Core.SpriteBatch.DrawString(_font, DUNGEON_TEXT, _dungeonTextPos, Color.White, 0.0f, _dungeonTextOrigin, titleMultiplyFontSize, SpriteEffects.None, 1.0f);
+            Core.SpriteBatch.DrawString(
+                _font,
+                DUNGEON_TEXT,
+                _dungeonTextPos,
+                Color.White,
+                0.0f,
+                _dungeonTextOrigin,
+                titleMultiplyFontSize,
+                SpriteEffects.None,
+                1.0f
+            );
 
-            Core.SpriteBatch.DrawString(_font, SLIME_TEXT, _slimeTextPos + new Vector2(10, 10), dropShadowColor, 0.0f, _slimeTextOrigin, titleMultiplyFontSize, SpriteEffects.None, 1.0f);
+            Core.SpriteBatch.DrawString(
+                _font,
+                SLIME_TEXT,
+                _slimeTextPos + new Vector2(10, 10),
+                dropShadowColor,
+                0.0f,
+                _slimeTextOrigin,
+                titleMultiplyFontSize,
+                SpriteEffects.None,
+                1.0f
+            );
 
-            Core.SpriteBatch.DrawString(_font, SLIME_TEXT, _slimeTextPos, Color.White, 0.0f, _slimeTextOrigin, titleMultiplyFontSize, SpriteEffects.None, 1.0f);
+            Core.SpriteBatch.DrawString(
+                _font,
+                SLIME_TEXT,
+                _slimeTextPos,
+                Color.White,
+                0.0f,
+                _slimeTextOrigin,
+                titleMultiplyFontSize,
+                SpriteEffects.None,
+                1.0f
+            );
 
             Core.SpriteBatch.End();
         }
@@ -271,3 +316,4 @@ public class TitleScene : Scene
         GumService.Default.Draw();
     }
 }
+

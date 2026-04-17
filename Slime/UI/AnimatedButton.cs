@@ -12,7 +12,6 @@ using Slime.Graphics;
 
 namespace Slime.UI;
 
-
 internal class AnimatedButton : Button
 {
     public AnimatedButton(TextureAtlas atlas)
@@ -29,7 +28,7 @@ internal class AnimatedButton : Button
         background.TextureAddress = TextureAddress.Custom;
         background.Color = Color.White;
 
-        TextRuntime  textInstance = buttonVisual.TextInstance;
+        TextRuntime textInstance = buttonVisual.TextInstance;
         textInstance.Text = "START";
         textInstance.Blue = 130;
         textInstance.Green = 86;
@@ -52,7 +51,7 @@ internal class AnimatedButton : Button
             LeftCoordinate = unfocusedTextureRegion.LeftTextureCoodinate,
             RightCoordinate = unfocusedTextureRegion.RightTextureCoordinate,
             FrameLength = .3f,
-            Texture = unfocusedTextureRegion.Texture
+            Texture = unfocusedTextureRegion.Texture,
         };
         unfocusedAnimation.Add(unfocusedFrame);
 
@@ -69,7 +68,7 @@ internal class AnimatedButton : Button
                 LeftCoordinate = region.LeftTextureCoodinate,
                 RightCoordinate = region.RightTextureCoordinate,
                 FrameLength = (float)focusedAtlasAnimation.Delay.TotalSeconds,
-                Texture = region.Texture
+                Texture = region.Texture,
             };
 
             focusedAnimation.Add(frame);
@@ -78,7 +77,7 @@ internal class AnimatedButton : Button
         background.AnimationChains = new AnimationChainList
         {
             unfocusedAnimation,
-            focusedAnimation
+            focusedAnimation,
         };
 
         buttonVisual.ButtonCategory.ResetAllStates();
