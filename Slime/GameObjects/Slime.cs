@@ -130,4 +130,29 @@ public class Slime
 
         _movementProgress = (float)(_movementTimer.TotalSeconds / s_movementTime.TotalSeconds);
     }
+
+    public void Draw()
+    {
+        foreach (SlimeSegment segement in _segments)
+        {
+            Vector2 pos = Vector2.Lerp(segement.At, segement.To, _movementProgress);
+
+            _sprite.Draw(Core.SpriteBatch, pos);
+        }
+    }
+
+    public Circle GetBounds()
+    {
+        SlimeSegment head = _segments[0];
+
+        Vector2 pos = Vector2.Lerp(head.At, head.To, _movementProgress);
+
+        Circle bounds = new Circle(
+            (int)(pos.X + (_sprite.Width * 0.5f)),
+            (int)(pos.Y + (_sprite.Height * 0.5f)),
+            (int)(_sprite.Width * 0.5f)
+        );
+
+        return bounds;
+    }
 }
