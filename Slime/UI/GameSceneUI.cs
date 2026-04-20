@@ -15,7 +15,7 @@ namespace Slime.UI;
 
 public class GameSceneUI : ContainerRuntime
 {
-    private static readonly string s_scoreFormat = "SCORE: {0.D6}";
+    private static readonly string s_scoreFormat = "SCORE: {0:D6}";
 
     private SoundEffect _uiSoundEffect;
 
