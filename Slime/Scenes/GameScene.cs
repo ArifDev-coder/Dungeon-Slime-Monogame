@@ -260,6 +260,12 @@ public class GameScene : Scene
 
             _state = GameState.Playing;
         }
+        else
+        {
+            _ui.ShowPausePanel();
+
+            _state = GameState.Paused;
+        }
     }
 
     private void GameOver()
