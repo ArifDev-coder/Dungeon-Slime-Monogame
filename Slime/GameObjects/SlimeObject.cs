@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Slime;
 using Slime.Graphics;
@@ -21,6 +22,10 @@ public class SlimeObject
     private List<SlimeSegment> _segments;
 
     private AnimatedSprite _sprite;
+
+    private Queue<Vector2> _inputBuffer;
+
+    private const int MAX_BUFFER_SIZE = 2;
 
     public event EventHandler BodyCollision;
 
@@ -45,11 +50,14 @@ public class SlimeObject
         _nextDirection = head.Direction;
 
         _movementTimer = TimeSpan.Zero;
+
+        _inputBuffer = new Queue<Vector2>(MAX_BUFFER_SIZE);
     }
 
     private void HandleInput()
     {
-        Vector2 potentialNextDirection = _nextDirection;
+        // Vector2 potentialNextDirection = _nextDirection;
+        Vector2 potentialNextDirection = Vector2.Zero;
 
         if (GameController.MoveUp())
         {
@@ -68,15 +76,32 @@ public class SlimeObject
             potentialNextDirection = Vector2.UnitX;
         }
 
-        float dot = Vector2.Dot(potentialNextDirection, _segments[0].Direction);
-        if (dot >= 0)
+        // float dot = Vector2.Dot(potentialNextDirection, _segments[0].Direction);
+        // if (dot >= 0)
+        // {
+        //     _nextDirection = potentialNextDirection;
+        // }
+
+        if (potentialNextDirection != Vector2.Zero && _inputBuffer.Count < MAX_BUFFER_SIZE)
         {
-            _nextDirection = potentialNextDirection;
+            Vector2 validateAgainst = _inputBuffer.Count > 0 ? _inputBuffer.Last() : _segments[0].Direction;
+
+            // Only allow direction change if it is no reversing the current direction
+            float dot = Vector2.Dot(potentialNextDirection, validateAgainst);
+            if (dot >= 0)
+            {
+                _inputBuffer.Enqueue(potentialNextDirection);
+            }
         }
     }
 
     private void Move()
     {
+        if (_inputBuffer.Count > 0)
+        {
+            _nextDirection = _inputBuffer.Dequeue();
+        }
+
         SlimeSegment head = _segments[0];
 
         head.Direction = _nextDirection;
@@ -92,10 +117,7 @@ public class SlimeObject
 
             if (head.At == segment.At)
             {
-                if (BodyCollision != null)
-                {
-                    BodyCollision.Invoke(this, EventArgs.Empty);
-                }
+                BodyCollision?.Invoke(this, EventArgs.Empty);
             }
 
             return;
