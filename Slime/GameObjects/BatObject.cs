@@ -6,7 +6,7 @@ using Slime.Graphics;
 
 namespace Slime.GameObjects;
 
-public class Bat
+public class BatObject
 {
     private const float MOVEMENT_SPEED = 5.0f;
 
@@ -18,7 +18,7 @@ public class Bat
 
     public Vector2 Position { get; set; }
 
-    public Bat(AnimatedSprite sprite, SoundEffect bauncSoundEffect)
+    public BatObject(AnimatedSprite sprite, SoundEffect bauncSoundEffect)
     {
         _sprite = sprite;
         _bounceSoundEffect = bauncSoundEffect;

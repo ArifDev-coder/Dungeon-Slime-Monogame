@@ -6,7 +6,7 @@ using Slime.Graphics;
 
 namespace Slime.GameObjects;
 
-public class Slime
+public class SlimeObject
 {
     private static readonly TimeSpan s_movementTime = TimeSpan.FromMilliseconds(200);
 
@@ -24,7 +24,7 @@ public class Slime
 
     public event EventHandler BodyCollision;
 
-    public Slime(AnimatedSprite sprite)
+    public SlimeObject(AnimatedSprite sprite)
     {
         _sprite = sprite;
     }
