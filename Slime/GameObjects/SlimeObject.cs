@@ -108,6 +108,8 @@ public class SlimeObject
 
         head.At = head.To;
 
+        head.To = head.At + head.Direction * _stride;
+
         _segments.Insert(0, head);
         _segments.RemoveAt(_segments.Count - 1);
 
