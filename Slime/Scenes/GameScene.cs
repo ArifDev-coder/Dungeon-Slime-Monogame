@@ -9,6 +9,7 @@ using Slime;
 using Slime.Graphics;
 using Slime.Scenes;
 using Gum.Managers;
+using Microsoft.Xna.Framework.Media;
 
 namespace Slime.Scenes;
 
@@ -36,6 +37,8 @@ public class GameScene : Scene
     private GameSceneUI _ui;
 
     private GameState _state;
+
+    private Song _themeSong;
 
     public override void Initialize()
     {
@@ -102,21 +105,24 @@ public class GameScene : Scene
         TextureAtlas entity = TextureAtlas.FromFile(Core.Content, "entity.xml");
 
         _tilemap = Tilemap.FromFile(Content, "tilemap.xml");
-        _tilemap.Scale = new Vector2(4.0f, 4.0f);
+        _tilemap.Scale = new Vector2(5.0f, 5.0f);
 
         AnimatedSprite slimeAnimation = entity.CreateAnimatedSprite("slime_move");
-        slimeAnimation.Scale = new Vector2(4.0f, 4.0f);
+        slimeAnimation.Scale = new Vector2(2.0f, 2.0f);
 
         _slime = new SlimeObject(slimeAnimation);
 
         AnimatedSprite batAnimation = entity.CreateAnimatedSprite("bat_basic");
-        batAnimation.Scale = new Vector2(4.0f, 4.0f);
+        batAnimation.Scale = new Vector2(2.0f, 2.0f);
 
         SoundEffect baounceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
 
         _bat = new BatObject(batAnimation, baounceSoundEffect);
 
         _collectionSoundEffect = Content.Load<SoundEffect>("audio/collect2");
+
+        _themeSong = Content.Load<Song>("audio/theme2");
+        Core.Audio.PlaySong(_themeSong);
     }
 
     public override void Update(GameTime gameTime)
