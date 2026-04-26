@@ -119,8 +119,8 @@ public class GameSceneUI : ContainerRuntime
         quitButton.X = -9.0f;
         quitButton.Y = -9.0f;
 
-        quitButton.Click += QuitButtonClick;
-        quitButton.Click += OnElementGotFocus;
+        quitButton.Click += OnQuitButtonClicked;
+        quitButton.GotFocus += OnElementGotFocus;
 
         panel.AddChild(quitButton);
 

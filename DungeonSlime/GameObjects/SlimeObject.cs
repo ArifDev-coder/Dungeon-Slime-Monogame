@@ -120,9 +120,9 @@ public class SlimeObject
             if (head.At == segment.At)
             {
                 BodyCollision?.Invoke(this, EventArgs.Empty);
+                return;
             }
 
-            return;
         }
     }
 
