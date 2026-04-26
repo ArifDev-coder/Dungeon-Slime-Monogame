@@ -108,12 +108,12 @@ public class GameScene : Scene
         _tilemap.Scale = new Vector2(5.0f, 5.0f);
 
         AnimatedSprite slimeAnimation = entity.CreateAnimatedSprite("slime_move");
-        slimeAnimation.Scale = new Vector2(2.0f, 2.0f);
+        slimeAnimation.Scale = new Vector2(4.0f, 4.0f);
 
         _slime = new SlimeObject(slimeAnimation);
 
         AnimatedSprite batAnimation = entity.CreateAnimatedSprite("bat_basic");
-        batAnimation.Scale = new Vector2(2.0f, 2.0f);
+        batAnimation.Scale = new Vector2(4.0f, 4.0f);
 
         SoundEffect baounceSoundEffect = Content.Load<SoundEffect>("audio/bounce");
 
