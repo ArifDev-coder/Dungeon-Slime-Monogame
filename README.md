@@ -2,7 +2,7 @@
  
 ## Setup Wine For Compile Shader On Linux
 ### Any Distro You Are Using (Just Adjust the Package Manager)
-1. `<pacakge manager install your distro use> wine winetricks p7zip wget`
+1. `<package manager install of your distro use> wine winetricks p7zip wget`
 2. `wget -qO- https://raw.githubusercontent.com/MonoGame/MonoGame/master/Tools/MonoGame.Effect.Compiler/mgfxc_wine_setup.sh | bash`
 3. `cd /tmp
 wget https://builds.dotnet.microsoft.com/dotnet/Sdk/8.0.420/dotnet-sdk-8.0.420-win-x64.exe`
