@@ -31,6 +31,12 @@
 /processorParam:Quality=Best
 /build:audio/collect2.wav
 
+#begin audio/gameover.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/gameover.wav
+
 #begin audio/dash.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -60,6 +66,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:audio/ui.wav
+
+#begin effects/grayscaleEffect.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:effects/grayscaleEffect.fx
 
 #begin entity.xml
 /copy:entity.xml
@@ -93,18 +105,6 @@
 /processorParam:TextureFormat=Color
 /build:images/atlas.png
 
-#begin images/UI/font.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:images/UI/font.png
-
 #begin images/title/bg-pattern.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -116,6 +116,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:images/title/bg-pattern.png
+
+#begin images/UI/font.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/UI/font.png
 
 #begin tilemap.xml
 /copy:tilemap.xml

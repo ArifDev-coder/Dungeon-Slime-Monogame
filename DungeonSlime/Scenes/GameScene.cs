@@ -32,11 +32,21 @@ public class GameScene : Scene
 
     private SoundEffect _collectionSoundEffect;
 
+    private SoundEffect _gameOver;
+
     private int _score;
 
     private GameSceneUI _ui;
 
     private GameState _state;
+
+    private Effect _grayscaleEffect;
+
+    private float _saturation = 1.0f;
+
+    private const float FADE_SPEED = 0.02f;
+
+    private bool isFirstGameOverSoundEffectPlay = true;
 
     private Song _themeSong;
 
@@ -90,6 +100,10 @@ public class GameScene : Scene
         slimePos.X = _tilemap.Columns / 2 * _tilemap.TileWidth;
         slimePos.Y = _tilemap.Rows / 2 * _tilemap.TileHeight;
 
+        isFirstGameOverSoundEffectPlay = true;
+
+        Core.Audio.PlaySong(_themeSong);
+
         _slime.Initialize(slimePos, _tilemap.TileWidth);
 
         _bat.RandomizeVelocity();
@@ -121,17 +135,26 @@ public class GameScene : Scene
 
         _collectionSoundEffect = Content.Load<SoundEffect>("audio/collect2");
 
+        _gameOver = Content.Load<SoundEffect>("audio/gameover");
+
         _themeSong = Content.Load<Song>("audio/theme2");
-        Core.Audio.PlaySong(_themeSong);
+
+        _grayscaleEffect = Content.Load<Effect>("effects/grayscaleEffect");
     }
 
     public override void Update(GameTime gameTime)
     {
         _ui.Update(gameTime);
 
-        if (_state == GameState.GameOver)
+        if (_state != GameState.Playing)
         {
-            return;
+            if (_state == GameState.GameOver)
+            {
+                _saturation = Math.Max(0.0f, _saturation - FADE_SPEED);
+                return;
+            }
+
+            _saturation = 0.0f;
         }
 
         if (GameController.Pause())
@@ -265,12 +288,18 @@ public class GameScene : Scene
             _ui.HidePausePanel();
 
             _state = GameState.Playing;
+
+            Core.Audio.ResumeAudio();
         }
         else
         {
             _ui.ShowPausePanel();
 
             _state = GameState.Paused;
+
+            _saturation = 1.0f;
+
+            Core.Audio.PauseAudio();
         }
     }
 
@@ -279,13 +308,35 @@ public class GameScene : Scene
         _ui.ShowGameOverPanel();
 
         _state = GameState.GameOver;
+
+        MediaPlayer.Stop();
+
+        if (isFirstGameOverSoundEffectPlay)
+        {
+            Core.Audio.PlaySoundEffect(_gameOver);
+
+            isFirstGameOverSoundEffectPlay = false;
+        }
+
+        _saturation = 1.0f;
     }
 
     public override void Draw(GameTime gameTime)
     {
         Core.GraphicsDevice.Clear(Color.Black);
 
-        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        // Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+        if (_state != GameState.Playing)
+        {
+            _grayscaleEffect.Parameters["Saturation"].SetValue(_saturation);
+
+            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: _grayscaleEffect);
+        }
+        else
+        {
+            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        }
 
         _tilemap.Draw(Core.SpriteBatch);
 
