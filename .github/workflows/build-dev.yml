@@ -2,13 +2,13 @@ name: Publish Dungeon Slime Game
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 env:
-  DOTNET_VERSION: '10.0'    
+  DOTNET_VERSION: "10.0"
 
 jobs:
   # ======================================================
@@ -72,14 +72,10 @@ jobs:
       - name: Publish game for Linux (self-contained)
         run: |
           dotnet publish -c Release -r linux-x64 -p:PublishReadyToRun=false -p:TieredCompilation=false --self-contained
-
-      - name: Archive Linux build as .tar.gz
-        run: |
-          tar -czvf DungeonSlime-Linux.tar.gz -C DungeonSlime/bin/Release/net10.0/linux-x64/publish/ .
-
+          
       - name: Upload Linux Artifact
         uses: actions/upload-artifact@v4
         with:
           name: DungeonSlime-Linux
-          path: DungeonSlime-Linux.tar.gz
+          path: DungeonSlime/bin/Release/net10.0/linux-x64/publish/ .
           retention-days: 14
