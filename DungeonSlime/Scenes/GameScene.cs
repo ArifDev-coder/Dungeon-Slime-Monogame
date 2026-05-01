@@ -38,6 +38,12 @@ public class GameScene : Scene
 
     private GameState _state;
 
+    private Effect _grayscaleEffect;
+
+    private float _saturation = 1.0f;
+
+    private const float FADE_SPEED = 0.02f;
+
     private Song _themeSong;
 
     public override void Initialize()
@@ -123,15 +129,22 @@ public class GameScene : Scene
 
         _themeSong = Content.Load<Song>("audio/theme2");
         Core.Audio.PlaySong(_themeSong);
+
+        _grayscaleEffect = Content.Load<Effect>("effects/grayscaleEffect");
     }
 
     public override void Update(GameTime gameTime)
     {
         _ui.Update(gameTime);
 
-        if (_state == GameState.GameOver)
+        if (_state != GameState.Playing)
         {
-            return;
+            _saturation = Math.Max(0.0f, _saturation - FADE_SPEED);
+
+            if (_state == GameState.GameOver)
+            {
+                return;
+            }
         }
 
         if (GameController.Pause())
@@ -271,6 +284,8 @@ public class GameScene : Scene
             _ui.ShowPausePanel();
 
             _state = GameState.Paused;
+
+            _saturation = 1.0f;
         }
     }
 
@@ -279,13 +294,26 @@ public class GameScene : Scene
         _ui.ShowGameOverPanel();
 
         _state = GameState.GameOver;
+
+        _saturation = 1.0f;
     }
 
     public override void Draw(GameTime gameTime)
     {
         Core.GraphicsDevice.Clear(Color.Black);
 
-        Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        // Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
+        if (_state != GameState.Playing)
+        {
+            _grayscaleEffect.Parameters["Saturation"].SetValue(_saturation);
+
+            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp, effect: _grayscaleEffect);
+        }
+        else
+        {
+            Core.SpriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        }
 
         _tilemap.Draw(Core.SpriteBatch);
 
