@@ -32,6 +32,8 @@ public class GameScene : Scene
 
     private SoundEffect _collectionSoundEffect;
 
+    private SoundEffect _gameOver;
+
     private int _score;
 
     private GameSceneUI _ui;
@@ -43,6 +45,8 @@ public class GameScene : Scene
     private float _saturation = 1.0f;
 
     private const float FADE_SPEED = 0.02f;
+
+    private bool isFirstGameOverSoundEffectPlay = true;
 
     private Song _themeSong;
 
@@ -96,6 +100,10 @@ public class GameScene : Scene
         slimePos.X = _tilemap.Columns / 2 * _tilemap.TileWidth;
         slimePos.Y = _tilemap.Rows / 2 * _tilemap.TileHeight;
 
+        isFirstGameOverSoundEffectPlay = true;
+
+        Core.Audio.PlaySong(_themeSong);
+
         _slime.Initialize(slimePos, _tilemap.TileWidth);
 
         _bat.RandomizeVelocity();
@@ -127,8 +135,9 @@ public class GameScene : Scene
 
         _collectionSoundEffect = Content.Load<SoundEffect>("audio/collect2");
 
+        _gameOver = Content.Load<SoundEffect>("audio/gameover");
+
         _themeSong = Content.Load<Song>("audio/theme2");
-        Core.Audio.PlaySong(_themeSong);
 
         _grayscaleEffect = Content.Load<Effect>("effects/grayscaleEffect");
     }
@@ -279,6 +288,8 @@ public class GameScene : Scene
             _ui.HidePausePanel();
 
             _state = GameState.Playing;
+
+            Core.Audio.ResumeAudio();
         }
         else
         {
@@ -287,6 +298,8 @@ public class GameScene : Scene
             _state = GameState.Paused;
 
             _saturation = 1.0f;
+
+            Core.Audio.PauseAudio();
         }
     }
 
@@ -295,6 +308,15 @@ public class GameScene : Scene
         _ui.ShowGameOverPanel();
 
         _state = GameState.GameOver;
+
+        MediaPlayer.Stop();
+
+        if (isFirstGameOverSoundEffectPlay)
+        {
+            Core.Audio.PlaySoundEffect(_gameOver);
+
+            isFirstGameOverSoundEffectPlay = false;
+        }
 
         _saturation = 1.0f;
     }

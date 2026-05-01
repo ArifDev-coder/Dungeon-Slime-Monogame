@@ -31,6 +31,12 @@
 /processorParam:Quality=Best
 /build:audio/collect2.wav
 
+#begin audio/gameover.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/gameover.wav
+
 #begin audio/dash.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
