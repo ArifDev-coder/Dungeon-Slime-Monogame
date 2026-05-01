@@ -139,12 +139,13 @@ public class GameScene : Scene
 
         if (_state != GameState.Playing)
         {
-            _saturation = Math.Max(0.0f, _saturation - FADE_SPEED);
-
             if (_state == GameState.GameOver)
             {
+                _saturation = Math.Max(0.0f, _saturation - FADE_SPEED);
                 return;
             }
+
+            _saturation = 0.0f;
         }
 
         if (GameController.Pause())
